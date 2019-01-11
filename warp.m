@@ -11,7 +11,7 @@ m = length(u1);
 n = length(u2);
 if max([m n])/(min([m n])-1) >= 3
     %disp('The length of the two contours differs by more than a factor of 3');
-    X = {0, []}; break;
+    X = {0, []}; return;
 end
 
 
@@ -39,7 +39,7 @@ k(1,1) = 1;
 for i = 2:min([11 m])
     if round(i/3) <=1;
         j = 1;
-        if k(i-1,j) >= 3
+        if k(i-1,j) > 3
             y = NaN;
         else
             y = N(i-1,j);

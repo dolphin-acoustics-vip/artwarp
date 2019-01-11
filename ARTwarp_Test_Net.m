@@ -13,8 +13,8 @@ DATA = rmfield(DATA,'isdir');
 o = zeros(1, 250);
 for c1 = 1:numSamples
     eval(['load ' DATA(c1).name ' -mat'])
-    DATA(c1).contour = interp1(1:length(fcontour)-1, fcontour(1:end-1), 1:10/2.902:length(fcontour)-1);
-    DATA(c1).length = length(fcontour(1:end-1));
+    DATA(c1).contour = interp1(1:length(freqContour)-1, freqContour(1:end-1), 1:10/2.902:length(freqContour)-1);
+    DATA(c1).length = length(freqContour(1:end-1));
     DATA(c1).category = 0;
 end
 

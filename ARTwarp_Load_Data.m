@@ -1,22 +1,37 @@
-% FORMATTING
+% This function loads all .ctr files in a user-selected directory into a DATA array 
+function ARTwarp_Load_Data
 
-global DATA
+global DATA numSamples tempres
 
-clear all
-[filename, path] = uigetfile('X', 'Select a Folder and type a search pattern');
-cd C:\matlabR12\work
-DATA = dir('C:\MATLABR12\work\*87-10-08*.ctr');
+path = uigetdir('*.ctr', 'Select the folder containing the contour files');
+eval(['cd ' path]);
+path = [path '/*ctr'];
+DATA = dir(path);
 DATA = rmfield(DATA,'date');
+DATA = rmfield(DATA,'datenum');
 DATA = rmfield(DATA,'bytes');
 DATA = rmfield(DATA,'isdir');
 [numSamples x] = size(DATA);
-o = zeros(1, 250);
 for c1 = 1:numSamples
-    name = ['                         '];
-    name(1: length(DATA(c1).name)) = DATA(c1).name;
-    DATA(c1).name = name;
+    clear tempres
+    clear ctrlength
     eval(['load ' DATA(c1).name ' -mat']);
-    DATA(c1).contour = interp1(1:length(fcontour)-1, fcontour(1:end-1), 1:10/2.902:length(fcontour)-1);
-    DATA(c1).length = length(fcontour(1:end-1));
+    if exist('ctrlength', 'var')
+        DATA(c1).ctrlength = ctrlength;
+        DATA(c1).length = length(freqContour);
+        DATA(c1).contour = freqContour;
+    else
+        DATA(c1).ctrlength = freqContour(length(freqContour))/1000;
+        DATA(c1).length = length(freqContour)-1;
+        DATA(c1).contour = freqContour(1:DATA(c1).length);
+    end
+    if exist('tempres', 'var')
+        DATA(c1).tempres = tempres;
+    else
+        DATA(c1).tempres = DATA(c1).ctrlength/DATA(c1).length;
+    end
     DATA(c1).category = 0;
 end
+h = findobj('Tag', 'Runmenu');                                                                                                                        
+set(h, 'Enable', 'on');
+

@@ -1,32 +1,40 @@
-% FORMATTING
-clear all
-close gcf
+function ARTwarp_Run_Categorisation
 
-cd C:\matlab\Pfiffe
-DATA = dir('C:\matlab\Pfiffe\*txt');
-DATA = rmfield(DATA,'date');
-DATA = rmfield(DATA,'bytes');
-DATA = rmfield(DATA,'isdir');
+global NET DATA numSamples vigilance bias learningRate maxNumCategories maxNumIterations sampleInterval resample
 
+% OBTAINING NETWORK PARAMETERS
+h = findobj('Tag', 'vigilance');
+vigilance = str2num(get(h, 'String'));
 
-ID = [023 024 025 026 027 028 029 030 031 NaN NaN NaN NaN NaN;
-    038 039 040 041 042 NaN NaN NaN NaN NaN NaN NaN NaN NaN;
-    049 050 051 052 053 054 055 056 057 058 059 060 061 062;
-    093 094 095 096 097 098 NaN NaN NaN NaN NaN NaN NaN NaN]';
+h = findobj('Tag', 'bias');
+bias = str2num(get(h, 'String'));
 
-id = find(ID > 0);
+h = findobj('Tag', 'learningRate');
+learningRate = str2num(get(h, 'String'));
 
-[numSamples x] = size(DATA); 
+h = findobj('Tag', 'maxNumCategories');
+maxNumCategories = round(str2num(get(h, 'String')));
 
-for i = 1:numSamples
-    eval(['s = load(''' DATA(i).name ''');']);
-    DATA(i).contour = s';
-    DATA(i).length = length(s);
-    [x DATA(i).ID] = find(ID == str2num(DATA(i).name(1:3)));
-    DATA(i).category = 0;
+h = findobj('Tag', 'maxNumIterations');
+maxNumIterations = round(str2num(get(h, 'String')));
+
+h = findobj('Tag', 'resample');
+resample = get(h, 'Value');
+
+% resample frequency contours to new sampling interval if 'resample' is
+% selected
+if resample == 1
+    h = findobj('Tag', 'sampleInterval');
+    sampleInterval = str2num(get(h, 'String'))/1000;
+    for c1 = 1:numSamples
+        DATA(c1).contour = interp1(1:length(DATA(c1).contour), DATA(c1).contour, 1:sampleInterval/DATA(c1).tempres:length(DATA(c1).contour));
+        DATA(c1).length = length(DATA(c1).contour);
+    end
 end
 
-[numSamples x] = size(DATA); 
+h = findobj('Tag','parameterGUI');
+close(h)
+
 
 % INITIALIZING NETWORK
 lengths = round([DATA.length]./4);
@@ -40,142 +48,18 @@ Ymax = mean([DATA.contour]);
 weight = ones(p, 0);
 
 % Create the structure and return.
-NET = struct('numFeatures', {p}, 'numCategories', {0}, 'maxNumCategories', {56}, 'weight', {weight}, ...
-    'vigilance', {96}, 'bias', {0.000001}, 'numIterations', {100}, 'learningRate', {0.3});
+NET = struct('numFeatures', {p}, 'numCategories', {0}, 'maxNumCategories', {maxNumCategories}, 'weight', {weight}, ...
+    'vigilance', {vigilance}, 'bias', {bias}, 'maxNumIterations', {maxNumIterations}, 'learningRate', {learningRate});
 
-numCols = round(NET.maxNumCategories^0.5);
-numRows = numCols+1;
-rowHeight = (0.98 - 0.01*numRows)/numRows;
-colWidth = (0.98 - 0.01*numCols)/(numCols+1);
-
-% GENERATE FIGURE
-h0 = figure('Units','normalized', ...
-    'Color',[0.752941176470588 0.752941176470588 0.752941176470588], ...
-    'MenuBar','none', ...
-    'Name','ART2 Neural Network', ...
-    'NumberTitle','off', ...
-    'PaperPosition',[18 180 576 432], ...
-    'PaperUnits','points', ...
-    'Position',[0 0.04036458333333333 1 0.8671875], ...
-    'Tag','Figure1');
-h1 = axes('Parent',h0, ...
-    'Units','normalized', ...
-    'CameraUpVector',[0 1 0], ...
-    'CameraUpVectorMode','manual', ...
-    'Position',[0.01 (rowHeight+0.01)*(numRows-1) + 0.01 colWidth rowHeight ], ...
-    'Tag', '0', ...
-    'XTick',[], ...
-    'YTick',[]);
-h2 = text('Parent',h1, ...
-    'Units','normalized', ...
-    'FontSize',9, ...
-    'HorizontalAlignment','center', ...
-    'Position',[0.5 1], ...
-    'String',' ', ...
-    'Tag','T0', ...
-    'VerticalAlignment', 'cap');
-h1 = axes('Parent',h0, ...
-    'Units','normalized', ...
-    'CameraUpVector',[0 1 0], ...
-    'CameraUpVectorMode','manual', ...
-    'Position',[(colWidth) + 0.02 (rowHeight+0.01)*(numRows-1) + 0.01 colWidth rowHeight], ...
-    'Tag', 'X', ...
-    'Visible', 'off', ...
-    'XTick',[], ...
-    'YTick',[]);
-h2 = text('Parent',h1, ...
-    'FontSize',9, ...
-    'HorizontalAlignment','left', ...
-    'Position',[0 1], ...
-    'String','Match:',...
-    'VerticalAlignment', 'cap');
-h2 = text('Parent',h1, ...
-    'FontSize',9, ...
-    'HorizontalAlignment','left', ...
-    'Position',[0 0.66], ...
-    'String','Iteration:',...
-    'VerticalAlignment', 'middle');
-h2 = text('Parent',h1, ...
-    'FontSize',9, ...
-    'HorizontalAlignment','left', ...
-    'Position',[0 0.33], ...
-    'String','Input:',...
-    'VerticalAlignment', 'middle');
-h2 = text('Parent',h1, ...
-    'FontSize',9, ...
-    'HorizontalAlignment','left', ...
-    'Position',[0 0], ...
-    'String','Reclassified:',...
-    'VerticalAlignment', 'bottom');
-
-h2 = text('Parent',h1, ...
-    'FontSize',9, ...
-    'HorizontalAlignment','left', ...
-    'Position',[0.5 1], ...
-    'String',' ',...
-    'Tag','Match',...
-    'VerticalAlignment', 'cap');
-h2 = text('Parent',h1, ...
-    'FontSize',9, ...
-    'HorizontalAlignment','left', ...
-    'Position',[0.5 0.66], ...
-    'String',' ',...
-    'Tag','Iteration',...
-    'VerticalAlignment', 'middle');
-h2 = text('Parent',h1, ...
-    'FontSize',9, ...
-    'HorizontalAlignment','left', ...
-    'Position',[0.5 0.33], ...
-    'String',' ',...
-    'Tag','Input',...
-    'VerticalAlignment', 'middle');
-h2 = text('Parent',h1, ...
-    'FontSize',9, ...
-    'HorizontalAlignment','left', ...
-    'Position',[0.5 0], ...
-    'String',' ',...
-    'Tag','Reclassifications',...
-    'VerticalAlignment', 'bottom');
-
-
-number = 1;
-for counter2 = 0:1:numCols
-    for counter1 = numRows-2:-1:0
-        h1 = axes('Parent',h0, ...
-            'Units','normalized', ...
-            'CameraUpVector',[0 1 0], ...
-            'CameraUpVectorMode','manual', ...
-            'Position',[(colWidth+0.01)*counter2 + 0.01 (rowHeight+0.01)*counter1 + 0.01 colWidth rowHeight], ...
-            'Tag', num2str(number), ...
-            'Visible', 'off', ...
-            'XTick',[], ...
-            'YTick',[]);
-        h2 = text('Parent',h1, ...
-            'Units','normalized', ...
-            'FontSize',9, ...
-            'HorizontalAlignment','center', ...
-            'Position',[0.5 1], ...
-            'String',['Neuron ' num2str(number)], ...
-            'Tag',['T' num2str(number)], ...
-            'VerticalAlignment', 'cap', ...
-            'Visible', 'off');
-        number = number+1;
-    end
-end
-
-
-
-
-
+% GENERATING THE GRAPHIC DISPLAY
+ARTwarp_Create_Figure
 
 % TRAINING
-
-
 [x, sortedRandom] = sort(randn(numSamples, 1));
 % Go through the data once for every iteration.
-for iterationNumber = 1:NET.numIterations
+for iterationNumber = 1:NET.maxNumIterations
     
-    % This variable will allow us to see whether new categories were 
+    % This variable will allow us to see whether new categories were
     % added during the current iteration.
     % Initialize the number of added categories to 0.
     numChanges = 0;
@@ -183,7 +67,7 @@ for iterationNumber = 1:NET.numIterations
     for indexNumber = 1:numSamples
         sampleNumber =sortedRandom(indexNumber);
         % Get the current data sample.
-        currentData = DATA(sampleNumber).contour
+        currentData = DATA(sampleNumber).contour';
         currentLength = length(currentData);
         currentName = DATA(sampleNumber).name;
         oldCategory = DATA(sampleNumber).category;
@@ -201,6 +85,7 @@ for iterationNumber = 1:NET.numIterations
         % This is equivalent to bottom-up--top-down processing in ART.
         resonance = 0;
         match = 0;
+        maxMatch = 0;
         numSortedCategories = length(sortedCategories);
         currentSortedIndex = 1;
         while(~resonance)
@@ -227,13 +112,16 @@ for iterationNumber = 1:NET.numIterations
             % Calculate the match given the current data sample and weight vector.
             match = ARTwarp_Calculate_Match(currentData(warpFunction), currentWeightVector);
             DATA(sampleNumber).match = match;
+            if match > maxMatch
+                maxMatch = match;
+            end
             
             % Check to see if the match is better than the vigilance.
             if match > NET.vigilance
                 % If so, the current category should code the input.
                 % Therefore, we should update the weights and induce resonance.
                 % warpFunction = round(mean([warpFunction; 1:(warpFunction(end)-1)/(length(warpFunction)-1):warpFunction(end)]));
-                NET.weight = ARTwarp_Update_Weights(currentData', NET.weight, currentCategory, NET.learningRate, warpFunction);
+                NET.weight = ARTwarp_Update_Weights(currentData, NET.weight, currentCategory, NET.learningRate, warpFunction);
                 DATA(sampleNumber).category = currentCategory;
                 Xmax = max([Xmax length(find(NET.weight(:, currentCategory)>0))]);
                 Ymax = max([Ymax max(NET.weight(:, currentCategory))]);
@@ -243,7 +131,7 @@ for iterationNumber = 1:NET.numIterations
                 % If the current category is the last in the list, make sure that
                 % the maximum number of categories has not been reached. If so,
                 % assign the input a category of []. If the maximum has not been
-                % reached, create a new category for the input, update the weights, 
+                % reached, create a new category for the input, update the weights,
                 % and induce resonance.
                 if(currentSortedIndex == numSortedCategories)
                     if(currentSortedIndex == NET.maxNumCategories)
@@ -256,9 +144,9 @@ for iterationNumber = 1:NET.numIterations
                         DATA(sampleNumber).category = currentSortedIndex + 1; Xmax = max([Xmax currentLength]);
                         Ymax = max([Ymax max(currentData)]);
                         resonance = 1;
-                    end 
-                else  
-                    currentSortedIndex = currentSortedIndex + 1; 
+                    end
+                else
+                    currentSortedIndex = currentSortedIndex + 1;
                 end
             end
         end
@@ -274,7 +162,7 @@ for iterationNumber = 1:NET.numIterations
         h1 = findobj('Tag', 'T0');
         set(h1, 'String', currentName, 'Color', 'r');
         h1 = findobj('Tag', 'Match');
-        set(h1, 'String', sprintf('%2.0f%%', match));
+        set(h1, 'String', sprintf('%2.0f%%', maxMatch));
         h1 = findobj('Tag', 'Iteration');
         set(h1, 'String', sprintf('%2.0f', iterationNumber));
         h1 = findobj('Tag', 'Input');
@@ -293,18 +181,36 @@ for iterationNumber = 1:NET.numIterations
         set(h1, 'Color', 'r');
         h1 = findobj('Tag', ['T' num2str(DATA(sampleNumber).category)]);
         set(h1, 'Color', 'r');
-        drawnow 
+        drawnow
+        %print statements added by JNO 23/02/2018
+        fprintf('Iteration %d\n', iterationNumber)
+        fprintf('Whistle %2.0f\n', indexNumber);
+        fprintf('Number of whistles reclassified %2.0f\n', numChanges);
     end
     % If no new categories were added, and no inputs were reclassified in the current iteration
     % then we've reached equilibrium. Thus, we can stop training.
     if numChanges == 0
         break;
-    end
-    
+    end  
+    %%added save info into this loop so that data is saved after every
+    %%iteration (JNO 23/02/2018)
+    %fprintf('Finished iteration number %d\n', iterationNumber)
+    %fprintf('Number of whistles reclassified %2.0f\n', numChanges);
+    name = sprintf('%3.1f', NET.vigilance);
+    name(end-1) = '_';
+    pad = '00000';
+    pad(end-length(name)+1:end) = name;
+    eval(['save ARTwarp' pad ' DATA NET iterationNumber']);
 end
-
 fprintf('The number of iterations needed was %d\n', iterationNumber);
-%eval(['save ecotype' num2str(vigilance) ' DATA NET iterationNumber']);
-
+name = sprintf('%3.1f', NET.vigilance);
+name(end-1) = '_';
+pad = '00000';
+pad(end-length(name)+1:end) = name;
+eval(['save ARTwarp' pad ' DATA NET iterationNumber']);
+h = findobj('Tag', 'Runmenu');
+set(h, 'Enable', 'on');
+h = findobj('Tag', 'Plotmenu');
+set(h, 'Enable', 'on');
 return
 
