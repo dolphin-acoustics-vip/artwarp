@@ -1,5 +1,10 @@
 # ARTwarp 
 
+ARTwarp is a MATLAB-based programme for the automated categorisation of tonal
+animal sounds. It has been tested successfully for bottlenose dolphin whistles
+and killer whale calls, but will be applicable to any sound that can be
+described by frequency contours.
+
 These `ARTwarp.m` files have been run successfully using Matlab 2016a and 2016b
 
 `ARTwarp.m` will open whistle contours extracted using Beluga
