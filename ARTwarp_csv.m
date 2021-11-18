@@ -4,7 +4,9 @@ close gcf
 
 global vigilance bias learningRate maxNumCategories maxNumIterations sampleInterval resample callback2
 
-load ARTwarp.mat
+load Default.mat
+
+addpath(pwd);
 
 % GENERATE FIGURE
 h0 = figure('Units','normalized', ...
