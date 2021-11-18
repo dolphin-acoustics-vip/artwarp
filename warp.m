@@ -31,9 +31,7 @@ parfor i = 1:m
     e1 = u1(i);
     for j = 1:n
         e2 = u2(j);
-        M(i,j) = min(e1,e2)/max(e1,e2)*100;
-        %  M(i,j) = min([u1(i) u2(j)])/max([u1(i) u2(j)])*100;
-        
+        M(i,j) = min(e1,e2)/max(e1,e2)*100;        
     end
 end
 
@@ -104,7 +102,6 @@ for i = 12:1:m
             elseif y == N(i-1, j -3)
                 x = 4;
             end
-            % [y x] = max([N(i-1,j-1) NaN N(i-1, j-2) N(i-1, j-3)]);
         else
             y = max(max(N(i-1,j-1), N(i-1,j)), max(N(i-1, j-2), N(i-1, j-3)));
             ks = 1;
@@ -118,10 +115,8 @@ for i = 12:1:m
             elseif y == N(i-1, j -3)
                 x = 4;
             end
-            %  [y x] = max([N(i-1,j-1) N(i-1,j) N(i-1, j-2) N(i-1, j-3)]);
         end
-    %    ks = [1 1+k(i-1,j) 1 1];
-    %    k(i,j) = ks(x);
+        % Avoiding repetitive array creation ( ks = [1 1+k(i-1,j) 1 1]; ) while computing k(i,j)
         k(i,j) = ks;
         N(i,j) = M(i,j)+y;
         p(i,j) = r2(x);
