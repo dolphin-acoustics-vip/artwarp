@@ -4,7 +4,7 @@ function ARTwarp_Load_Data
 global DATA numSamples tempres
 
 path = uigetdir('*.ctr', 'Select the folder containing the contour files');
-eval(['cd ' path]);
+cd(path);
 path = [path '/*ctr'];
 DATA = dir(path);
 DATA = rmfield(DATA,'date');
