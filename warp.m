@@ -1,4 +1,4 @@
-function X = warp(u1, u2)
+function X = warp(u1, u2);
 
 % This algorithm determines a warping function to minimize the sum square difference of two frequency contours. 
 % The algorithm is similar to that of Itakura (1975). The maximum number of consecutive horizontal steps (2 in 
@@ -27,11 +27,9 @@ k = ones(m, n);
 
 
 %CALCULATE SIMILARITY MATRIX M
-parfor i = 1:m
-    e1 = u1(i);
-    for j = 1:n
-        e2 = u2(j);
-        M(i,j) = min(e1,e2)/max(e1,e2)*100;        
+for i = 1:1:m
+    for j = 1:1:n
+        M(i,j) = min([u1(i) u2(j)])/max([u1(i) u2(j)])*100;
     end
 end
 
@@ -90,34 +88,12 @@ end
 for i = 12:1:m
     for j = max([round(i/3) (i-m)*3+n]):min([3*i round((i-m)/3+n)])
         if k(i-1,j) >= 3
-            y = max(max(N(i-1,j-1), NaN), max(N(i-1, j-2), N(i-1, j-3)));
-            ks = 1;
-            if y == N(i-1,j-1)
-                x = 1;
-            elseif isnan(y)
-                x = 2;
-                ks = 1 + k(i-1,j);
-            elseif y == N(i-1, j - 2)
-                x = 3;
-            elseif y == N(i-1, j -3)
-                x = 4;
-            end
+            [y x] = max([N(i-1,j-1) NaN N(i-1, j-2) N(i-1, j-3)]);
         else
-            y = max(max(N(i-1,j-1), N(i-1,j)), max(N(i-1, j-2), N(i-1, j-3)));
-            ks = 1;
-            if y == N(i-1,j-1)
-                x = 1;
-            elseif y == N(i-1,j)
-                x = 2;
-                ks = 1 + k(i-1,j);
-            elseif y == N(i-1, j - 2)
-                x = 3;
-            elseif y == N(i-1, j -3)
-                x = 4;
-            end
+            [y x] = max([N(i-1,j-1) N(i-1,j) N(i-1, j-2) N(i-1, j-3)]);
         end
-        % Avoiding repetitive array creation ( ks = [1 1+k(i-1,j) 1 1]; ) while computing k(i,j)
-        k(i,j) = ks;
+        ks = [1 1+k(i-1,j) 1 1];
+        k(i,j) = ks(x);
         N(i,j) = M(i,j)+y;
         p(i,j) = r2(x);
     end
