@@ -2,9 +2,11 @@
 clear all
 close gcf
 
-global vigilance bias learningRate maxNumCategories maxNumIterations sampleInterval resample callback2
+global warpFactorLevel vigilance bias learningRate maxNumCategories maxNumIterations sampleInterval resample callback2
 
-load Default.mat
+load Default.mat;
+
+warpFactorLevel = 3; % Set to 3 by default
 
 addpath(pwd);
 

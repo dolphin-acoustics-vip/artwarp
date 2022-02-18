@@ -2,9 +2,12 @@ function X = warp(u1, u2)
 
 % This algorithm determines a warping function to minimize the sum square difference of two frequency contours. 
 % The algorithm is similar to that of Itakura (1975). The maximum number of consecutive horizontal steps (2 in 
-% Itakura 1975) is 3 in this version (determined by x the statement 'if k(i-1,j)+1 >= x'). The function also allows 
-% vertical jumps of 3 rather than 2.The function yields an array that contains the sum square difference of the 
-% original and the warped contour in cell {1,1}, as well as the warping function in cell {1,2}
+% Itakura 1975) is 'warpFactorLevel' in this version (determined by variable 'warpFactorLevel' the statement 
+% 'if k(i-1,j)+1 >= warpFactorLevel'). The function also allows vertical jumps of 3 rather than 2. The function
+% yields an array that contains the sum square difference of the original and the warped contour in cell {1,1},
+% as well as the warping function in cell {1,2}
+
+global warpFactorLevel; % maximum number of allowed consecutive horizontal steps, or the warp factor level
 
 %TEST FOR DIFFERENCES IN LENGTH GREATER THAN THREE
 m = length(u1);
@@ -41,7 +44,7 @@ k(1,1) = 1;
 for i = 2:min([11 m])
     if round(i/3) <=1;
         j = 1;
-        if k(i-1,j) > 3
+        if k(i-1,j) > warpFactorLevel
             y = NaN;
         else
             y = N(i-1,j);
@@ -52,7 +55,7 @@ for i = 2:min([11 m])
     end
     if round(i/3) <=2;
         j = 2;
-        if k(i-1,j) >= 3
+        if k(i-1,j) >= warpFactorLevel
             y = N(i-1,j-1);
             x = 1;
         else
@@ -65,7 +68,7 @@ for i = 2:min([11 m])
     end
     if round(i/3) <=3;
         j = 3;
-        if k(i-1,j) >= 3
+        if k(i-1,j) >= warpFactorLevel
             [y x] = max([N(i-1,j-1) NaN N(i-1, j-2)]);
         else
             [y x] = max([N(i-1,j-1) N(i-1,j) N(i-1, j-2)]);
@@ -76,7 +79,7 @@ for i = 2:min([11 m])
         p(i,j) = r2(x);
     end
     for j = 4:min([3*i round((i-m)/3+n)])
-        if k(i-1,j) >= 3
+        if k(i-1,j) >= warpFactorLevel
             [y x] = max([N(i-1,j-1) NaN N(i-1, j-2) N(i-1, j-3)]);
         else
             [y x] = max([N(i-1,j-1) N(i-1,j) N(i-1, j-2) N(i-1, j-3)]);
@@ -89,7 +92,7 @@ for i = 2:min([11 m])
 end
 for i = 12:1:m
     for j = max([round(i/3) (i-m)*3+n]):min([3*i round((i-m)/3+n)])
-        if k(i-1,j) >= 3
+        if k(i-1,j) >= warpFactorLevel
             y = max(max(N(i-1,j-1), NaN), max(N(i-1, j-2), N(i-1, j-3)));
             ks = 1;
             if y == N(i-1,j-1)
@@ -139,6 +142,3 @@ drawnow
 D = N(m, n)/length(warpfun);
 X = {D, warpfun};
 clear N M p;
-
-
-
