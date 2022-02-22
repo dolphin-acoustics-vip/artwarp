@@ -1,10 +1,9 @@
 % This function loads all .ctr files in a user-selected directory into a DATA array 
 function ARTwarp_Load_Data
 
-global DATA numSamples tempres artwarpPath
+global DATA numSamples tempres
 
 path = uigetdir('*.ctr', 'Select the folder containing the contour files');
-cd(path); % Change path to data directory
 path = [path '/*ctr'];
 DATA = dir(path);
 DATA = rmfield(DATA,'date');
@@ -21,7 +20,7 @@ for c1 = 1:numSamples
     clear tempres
     clear ctrlength
     clear fcontour
-    eval(['load ' DATA(c1).name ' -mat']);
+    eval(['load ' append(DATA(c1).folder, '/', DATA(c1).name) ' -mat']);
     if exist('ctrlength', 'var')
         DATA(c1).ctrlength = ctrlength;
         DATA(c1).length = length(freqContour);
@@ -44,6 +43,3 @@ for c1 = 1:numSamples
 end
 h = findobj('Tag', 'Runmenu');                                                                                                                        
 set(h, 'Enable', 'on'); 
-
-% Restore path to ARTwarp code directory
-cd(artwarpPath);

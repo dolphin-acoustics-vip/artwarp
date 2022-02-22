@@ -2,14 +2,11 @@
 clear all
 close gcf
 
-global vigilance bias learningRate maxNumCategories maxNumIterations sampleInterval resample callback2 artwarpPath
+global vigilance bias learningRate maxNumCategories maxNumIterations sampleInterval resample callback2
 
 load Default.mat
 
 addpath(pwd);
-
-% Save the path to the code directory
-artwarpPath=pwd;
 
 % GENERATE FIGURE
 h0 = figure('Units','normalized', ...
