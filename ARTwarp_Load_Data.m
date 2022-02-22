@@ -1,10 +1,10 @@
 % This function loads all .ctr files in a user-selected directory into a DATA array 
 function ARTwarp_Load_Data
 
-global DATA numSamples tempres
+global DATA numSamples tempres artwarpPath
 
 path = uigetdir('*.ctr', 'Select the folder containing the contour files');
-cd(path);
+cd(path); % Change path to data directory
 path = [path '/*ctr'];
 DATA = dir(path);
 DATA = rmfield(DATA,'date');
@@ -43,5 +43,7 @@ for c1 = 1:numSamples
     DATA(c1).category = 0;
 end
 h = findobj('Tag', 'Runmenu');                                                                                                                        
-set(h, 'Enable', 'on');
+set(h, 'Enable', 'on'); 
 
+% Restore path to ARTwarp code directory
+cd(artwarpPath);
