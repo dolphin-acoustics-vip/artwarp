@@ -20,7 +20,7 @@ for c1 = 1:numSamples
     clear tempres
     clear ctrlength
     clear fcontour
-    eval(['load ' append(DATA(c1).folder, '/', DATA(c1).name) ' -mat']);
+    eval(['load ' fullfile(DATA(c1).folder, DATA(c1).name) ' -mat']);
     if exist('ctrlength', 'var')
         DATA(c1).ctrlength = ctrlength;
         DATA(c1).length = length(freqContour);
