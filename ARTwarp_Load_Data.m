@@ -4,7 +4,6 @@ function ARTwarp_Load_Data
 global DATA numSamples tempres
 
 path = uigetdir('*.ctr', 'Select the folder containing the contour files');
-cd(path);
 path = [path '/*ctr'];
 DATA = dir(path);
 DATA = rmfield(DATA,'date');
@@ -21,7 +20,7 @@ for c1 = 1:numSamples
     clear tempres
     clear ctrlength
     clear fcontour
-    eval(['load ' DATA(c1).name ' -mat']);
+    eval(['load ' fullfile(DATA(c1).folder, DATA(c1).name) ' -mat']);
     if exist('ctrlength', 'var')
         DATA(c1).ctrlength = ctrlength;
         DATA(c1).length = length(freqContour);
@@ -43,5 +42,4 @@ for c1 = 1:numSamples
     DATA(c1).category = 0;
 end
 h = findobj('Tag', 'Runmenu');                                                                                                                        
-set(h, 'Enable', 'on');
-
+set(h, 'Enable', 'on'); 
