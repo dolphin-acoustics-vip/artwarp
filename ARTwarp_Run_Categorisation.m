@@ -212,5 +212,7 @@ h = findobj('Tag', 'Runmenu');
 set(h, 'Enable', 'on');
 h = findobj('Tag', 'Plotmenu');
 set(h, 'Enable', 'on');
+h = findobj('Tag', 'Plot2menu');
+set(h, 'Enable', 'on');
 return
 

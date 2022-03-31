@@ -1,4 +1,7 @@
 function ARTwarp_Plot_Net2
+% The following code is adapted from 'ARTwarp_Plot_Net.m'
+% It allows an alternative results plot display showing contours grouped by 
+% their reference contours.
 
 global NET DATA
 
@@ -35,17 +38,14 @@ h2 = uimenu('Parent',h1, ...
     'Label','Plot Categorisation', ...
     'Enable','on', ...
     'Tag','Plotmenu');
+h2 = uimenu('Parent',h1, ...
+    'Callback','ARTwarp_Plot_Net2', ...
+    'Accelerator','o', ...
+    'Label','Plot Categorisation 2', ...
+    'Enable','on', ...
+    'Tag','Plot2menu');
 
-% MATLAB does not have scrollbars making this a lot harder
-
-% Create a tab for every category
-% When clicked on one category display contours belonging to that category
-% p = uipanel(h0,'Position',[20 20 196 135]);
-% tabgp = uitabgroup(h0,'Position',[.01 .01 .98 .98]);
-
-% Make scrolable sub panel for reference contours
-% Under the panel for reference contours make another horizontally
-% scrollable panel for the data contours
+% MATLAB figurebased apps does not have scrollbars making this a lot harder
 
 [Xmax x] = size(NET.weight);
 Ymax = max(max(NET.weight));
@@ -59,8 +59,9 @@ numRows = numRows+1;
 rowHeight = (0.98 - 0.01*numRows)/numRows;
 colWidth = (0.98 - 0.01*numCols)/(numCols+1);
 
-referenceContours = []
+activeCategory = 1;
 
+% Creates a panel for holding whistle contours of category 'categoryNumber'
 function updatePanel(hObject, eventData, categoryNumber)
     % Make panel container for holding contours
     contoursPanel = uipanel(h0,...
@@ -68,22 +69,26 @@ function updatePanel(hObject, eventData, categoryNumber)
      'ButtonDownFcn', 'disp(''Clicked panel'');',...
      'Position',[.02 .02 .96 .86], ...
      'Tag', 'contoursPanel');
+    
+    % Make the text lable of reference contour Red (Active/Selected)
+    txt = findobj('Tag',append("CategoryLabel", num2str(activeCategory)));
+    txt.Color = 'black';
+    txt = findobj('Tag',append("CategoryLabel", num2str(categoryNumber)));
+    txt.Color = 'blue';
+    activeCategory = categoryNumber;
 
-    disp(categoryNumber);
     contours = [];
     r = 0; 
     c = 0;
     
     for i = 1:numContours
         if DATA(i).category == categoryNumber
-            disp('cat');
-            
             % Plot contours under category 'categoryNumber'
             h1 = axes('Parent',contoursPanel, ...
                 'Units','normalized', ...
                 'CameraUpVector',[0 1 0], ...
                 'CameraUpVectorMode','manual', ...
-                'Position',[.20 * (c + 1), .70 - 0.20 * (r), .10, .10], ...
+                'Position',[.05 + .20 * c, .85 - 0.20 * r, .10, .10], ...
                 'Visible', 'on', ...
                 'XLim', [0 Xmax], ...
                 'YLim', [0 Ymax], ...
@@ -101,22 +106,16 @@ function updatePanel(hObject, eventData, categoryNumber)
             contours = [contours h1];
             c = c + 1;
              
-            if rem((c + 1), 5) == 0
+            if rem(c, 5) == 0
                 c = 0;
                 r = r + 1;
             end
         end
     end
-%     align(contours,'fixed', 30, 'middle');
 end
 
-% Display reference contours
+% Display reference contours - taken from ARTwarp_Plot_Net.m
 for counter1 = 1:NET.numCategories
-%     disp(sprintf('Category %s:',num2str(counter1)));
-%     data = find(NET.weight(:,1)>0); 
-%     disp(sprintf('%6.1f',NET.weight(data,1)'));
-
-
     p = uipanel(h0,...
              'BackgroundColor','white',...
              'Position',[(colWidth+0.01)*(counter1-1) + 0.01 (rowHeight+0.01)*(numRows-1) + 0.01 colWidth rowHeight]);
@@ -139,8 +138,11 @@ for counter1 = 1:NET.numCategories
         'Position',[0.5 1], ...
         'String',['Category ' num2str(counter1)], ...
         'VerticalAlignment', 'cap', ...
-        'Visible', 'on');   
+        'Visible', 'on', ...
+        'Tag', append("CategoryLabel", num2str(counter1)));   
     h3 = line('Parent', h1, 'Color','r', 'Tag', ['P' num2str(counter1)], 'XData', 1:NET.numFeatures, 'YData', NET.weight(:,counter1));
 end
+
+updatePanel(nan, nan, activeCategory); % Set the first panel to be the active category
 
 end
