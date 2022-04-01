@@ -1,6 +1,6 @@
 function ARTwarp_Run_Categorisation
 
-global NET DATA numSamples vigilance bias learningRate maxNumCategories maxNumIterations sampleInterval resample
+global NET DATA numSamples vigilance bias learningRate maxNumCategories maxNumIterations sampleInterval resample minUI
 
 % OBTAINING NETWORK PARAMETERS
 h = findobj('Tag', 'vigilance');
@@ -35,7 +35,6 @@ end
 h = findobj('Tag','parameterGUI');
 close(h)
 
-
 % INITIALIZING NETWORK
 lengths = round([DATA.length]./4);
 n = round(mean(lengths));
@@ -51,20 +50,30 @@ weight = ones(p, 0);
 NET = struct('numFeatures', {p}, 'numCategories', {0}, 'maxNumCategories', {maxNumCategories}, 'weight', {weight}, ...
     'vigilance', {vigilance}, 'bias', {bias}, 'maxNumIterations', {maxNumIterations}, 'learningRate', {learningRate});
 
-% GENERATING THE GRAPHIC DISPLAY
-ARTwarp_Create_Figure
+if(minUI)
+    % Initialize Progress bar
+    wb = waitbar(0,'Initializing Network',...
+        'Name', 'Training...',...
+        'WindowStyle', 'normal');
+    pause(.5)
+else
+    % GENERATING THE GRAPHIC DISPLAY
+    ARTwarp_Create_Figure
+end
 
 % TRAINING
 [x, sortedRandom] = sort(randn(numSamples, 1));
 % Go through the data once for every iteration.
 for iterationNumber = 1:NET.maxNumIterations
-    
     % This variable will allow us to see whether new categories were
     % added during the current iteration.
     % Initialize the number of added categories to 0.
     numChanges = 0;
     % Classify and learn on each sample.
     for indexNumber = 1:numSamples
+        if(minUI)
+            waitbar((indexNumber/numSamples),wb,append('Iteration ', num2str(iterationNumber)));
+        end
         sampleNumber =sortedRandom(indexNumber);
         % Get the current data sample.
         currentData = DATA(sampleNumber).contour';
@@ -154,34 +163,36 @@ for iterationNumber = 1:NET.maxNumIterations
         if oldCategory ~= DATA(sampleNumber).category;
             numChanges = numChanges+1;
         end
-        % Graphic output
-        delete(findobj('Tag', 'P0'));
-        h0 = findobj('Tag', '0');
-        set(h0, 'XLim', [0 Xmax], 'YLim', [0 Ymax]);
-        h1 = line('Parent', h0, 'Color','r', 'Tag', 'P0', 'XData', 1:currentLength, 'YData', currentData);
-        h1 = findobj('Tag', 'T0');
-        set(h1, 'String', currentName, 'Color', 'r');
-        h1 = findobj('Tag', 'Match');
-        set(h1, 'String', sprintf('%2.0f%%', maxMatch));
-        h1 = findobj('Tag', 'Iteration');
-        set(h1, 'String', sprintf('%2.0f', iterationNumber));
-        h1 = findobj('Tag', 'Input');
-        set(h1, 'String', sprintf('%2.0f of %2.0f', indexNumber, numSamples));
-        h1 = findobj('Tag', 'Reclassifications');
-        set(h1, 'String', sprintf('%2.0f', numChanges))
-        for counter3 = 1:NET.numCategories
-            delete(findobj('Tag', ['P' num2str(counter3)]));
-            h0 = findobj('Tag', num2str(counter3));
-            set(h0, 'Tag', num2str(counter3), 'Visible', 'on', 'XLim', [0 Xmax], 'YLim', [0 Ymax]);
-            h1 = line('Parent', h0, 'Color','k', 'Tag', ['P' num2str(counter3)], 'XData', 1:p, 'YData', NET.weight(:,counter3));
-            h1 = findobj('Tag', ['T' num2str(counter3)]);
-            set(h1, 'Color', 'k', 'Visible', 'on');
+        if(not(minUI))
+            % Graphic output
+            delete(findobj('Tag', 'P0'));
+            h0 = findobj('Tag', '0');
+            set(h0, 'XLim', [0 Xmax], 'YLim', [0 Ymax]);
+            h1 = line('Parent', h0, 'Color','r', 'Tag', 'P0', 'XData', 1:currentLength, 'YData', currentData);
+            h1 = findobj('Tag', 'T0');
+            set(h1, 'String', currentName, 'Color', 'r');
+            h1 = findobj('Tag', 'Match');
+            set(h1, 'String', sprintf('%2.0f%%', maxMatch));
+            h1 = findobj('Tag', 'Iteration');
+            set(h1, 'String', sprintf('%2.0f', iterationNumber));
+            h1 = findobj('Tag', 'Input');
+            set(h1, 'String', sprintf('%2.0f of %2.0f', indexNumber, numSamples));
+            h1 = findobj('Tag', 'Reclassifications');
+            set(h1, 'String', sprintf('%2.0f', numChanges))
+            for counter3 = 1:NET.numCategories
+                delete(findobj('Tag', ['P' num2str(counter3)]));
+                h0 = findobj('Tag', num2str(counter3));
+                set(h0, 'Tag', num2str(counter3), 'Visible', 'on', 'XLim', [0 Xmax], 'YLim', [0 Ymax]);
+                h1 = line('Parent', h0, 'Color','k', 'Tag', ['P' num2str(counter3)], 'XData', 1:p, 'YData', NET.weight(:,counter3));
+                h1 = findobj('Tag', ['T' num2str(counter3)]);
+                set(h1, 'Color', 'k', 'Visible', 'on');
+            end
+            h1 = findobj('Tag', ['P' num2str(DATA(sampleNumber).category)]);
+            set(h1, 'Color', 'r');
+            h1 = findobj('Tag', ['T' num2str(DATA(sampleNumber).category)]);
+            set(h1, 'Color', 'r');
+            drawnow
         end
-        h1 = findobj('Tag', ['P' num2str(DATA(sampleNumber).category)]);
-        set(h1, 'Color', 'r');
-        h1 = findobj('Tag', ['T' num2str(DATA(sampleNumber).category)]);
-        set(h1, 'Color', 'r');
-        drawnow
         %print statements added by JNO 23/02/2018
         fprintf('Iteration %d\n', iterationNumber)
         fprintf('Whistle %2.0f\n', indexNumber);
@@ -192,6 +203,7 @@ for iterationNumber = 1:NET.maxNumIterations
     if numChanges == 0
         break;
     end  
+    
     %%added save info into this loop so that data is saved after every
     %%iteration (JNO 23/02/2018)
     %fprintf('Finished iteration number %d\n', iterationNumber)
@@ -201,6 +213,10 @@ for iterationNumber = 1:NET.maxNumIterations
     pad = '00000';
     pad(end-length(name)+1:end) = name;
     eval(['save ARTwarp' pad ' DATA NET iterationNumber']);
+end
+if(minUI)
+    waitbar(1, wb, "Finished... Check console for logs");
+    minUI = false;
 end
 fprintf('The number of iterations needed was %d\n', iterationNumber);
 name = sprintf('%3.1f', NET.vigilance);
