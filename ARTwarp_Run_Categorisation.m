@@ -214,5 +214,7 @@ h = findobj('Tag', 'Plotmenu');
 set(h, 'Enable', 'on');
 h = findobj('Tag', 'Plot2menu');
 set(h, 'Enable', 'on');
+h = findobj('Tag', 'SaveRefCtrsCSV');
+set(h, 'Enable', 'on')
 return
 
