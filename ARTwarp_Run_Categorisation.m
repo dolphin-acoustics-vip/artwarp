@@ -1,6 +1,6 @@
 function ARTwarp_Run_Categorisation
 
-global NET DATA numSamples vigilance bias learningRate maxNumCategories maxNumIterations sampleInterval resample
+global NET DATA numSamples vigilance bias learningRate maxNumCategories maxNumIterations sampleInterval resample loadRefCtrs tempres
 
 % OBTAINING NETWORK PARAMETERS
 h = findobj('Tag', 'vigilance');
@@ -40,15 +40,108 @@ close(h)
 lengths = round([DATA.length]./4);
 n = round(mean(lengths));
 p = max([DATA.length]);
-mx = max([DATA.contour]);
-mn = min([DATA.contour]);
+% mx = max([DATA.contour]);
+% mn = min([DATA.contour]);
 Xmax = n;
 Ymax = mean([DATA.contour]);
 % Create and initialize the weight matrix.
 weight = ones(p, 0);
+numCategories = 0;
+
+if(loadRefCtrs)
+    % Load data from folder and initialize weights matrix
+    % Get path to contour files
+    path = uigetdir("./", 'Select the folder containing the contour files (csv or ctr)');
+    ctr_path = [path '/*ctr'];
+    csv_path = [path '/*csv'];
+    ctr_data = dir(ctr_path);
+    ctr_data = rmfield(ctr_data,'date');
+    ctr_data = rmfield(ctr_data,'datenum');
+    ctr_data = rmfield(ctr_data,'bytes');
+    ctr_data = rmfield(ctr_data,'isdir');
+    csv_data = dir(csv_path);
+    csv_data = rmfield(csv_data,'date');
+    csv_data = rmfield(csv_data,'datenum');
+    csv_data = rmfield(csv_data,'bytes');
+    csv_data = rmfield(csv_data,'isdir');
+    [nCtrFiles xCtrFiles] = size(ctr_data);
+    [nCsvFiles xCsvFiles] = size(csv_data);
+    
+    if(nCtrFiles == 0 && nCsvFiles == 0) 
+        disp("No csv or ctr files found in path provided")
+        return;
+    end
+    
+    if(nCtrFiles < nCsvFiles)
+        % Assume user want the csv files as the reference contours
+        maxl = 0;
+        for c1 = 1:nCsvFiles
+            disp(fullfile(path, csv_data(c1).name))
+            test=csvread(fullfile(path, csv_data(c1).name),0,0);    %this is if you don't want it to skip the header row...IS THAT RIGHT??
+            % test=csvread(fullfile(DATA(c1).folder, DATA(c1).name),1,0);   %this is if you want it to skip the
+            %header row
+            freqContour = test(:,1);
+            csv_data(c1).ctrlength = freqContour(length(freqContour))/1000;
+            csv_data(c1).length = length(freqContour)-1;
+            csv_data(c1).contour = freqContour(1:csv_data(c1).length);
+            csv_data(c1).tempres = csv_data(c1).ctrlength/csv_data(c1).length;
+            csv_data(c1).category = 0;
+            maxl = max(maxl, csv_data(c1).length);
+        end
+        p = max(maxl, p);
+        weight = ones(p, 0);
+        for c1 = 1:nCsvFiles
+            resizedWeight = ARTwarp_Add_New_Category(weight, csv_data(c1).contour);
+            weight = resizedWeight;
+        end
+        
+        numCategories = nCsvFiles;
+        disp("Successfully loaded CSV reference contours")
+    else
+        % Assume user wants the ctr files as the reference contours
+        maxl = 0;
+        fcontour = 0;
+        for c1 = 1:nCtrFiles
+            clear tempres
+            clear ctrlength
+            clear fcontour
+            eval(['load ' fullfile(ctr_data(c1).folder, ctr_data(c1).name) ' -mat']);
+            if exist('ctrlength', 'var')
+                ctr_data(c1).ctrlength = ctrlength;
+                ctr_data(c1).length = length(freqContour);
+                ctr_data(c1).contour = freqContour;
+            elseif exist('fcontour', 'var')
+                ctr_data(c1).ctrlength = fcontour(length(fcontour))/1000;
+                ctr_data(c1).length = length(fcontour);
+                ctr_data(c1).contour = fcontour(1:ctr_data(c1).length);
+            else
+                ctr_data(c1).ctrlength = freqContour(length(freqContour))/1000;
+                ctr_data(c1).length = length(freqContour)-1;
+                ctr_data(c1).contour = freqContour(1:ctr_data(c1).length);
+            end
+            if exist('tempres', 'var')
+                ctr_data(c1).tempres = tempres;
+            else
+                ctr_data(c1).tempres = ctr_data(c1).ctrlength/ctr_data(c1).length;
+            end
+            ctr_data(c1).category = 0;
+            maxl = max(maxl, ctr_data(c1).length);
+        end
+        p = max(maxl, p);
+        weight = ones(p, 0);
+        for c1 = 1:nCtrFiles
+            resizedWeight = ARTwarp_Add_New_Category(weight, ctr_data(c1).contour);
+            weight = resizedWeight;
+        end
+        
+        numCategories = nCtrFiles;
+        disp("Successfully loaded CTR reference contours")
+
+    end
+end
 
 % Create the structure and return.
-NET = struct('numFeatures', {p}, 'numCategories', {0}, 'maxNumCategories', {maxNumCategories}, 'weight', {weight}, ...
+NET = struct('numFeatures', {p}, 'numCategories', {numCategories}, 'maxNumCategories', {maxNumCategories}, 'weight', {weight}, ...
     'vigilance', {vigilance}, 'bias', {bias}, 'maxNumIterations', {maxNumIterations}, 'learningRate', {learningRate});
 
 % GENERATING THE GRAPHIC DISPLAY
