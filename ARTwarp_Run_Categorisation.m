@@ -1,8 +1,11 @@
 function ARTwarp_Run_Categorisation
 
-global NET DATA numSamples vigilance bias learningRate maxNumCategories maxNumIterations sampleInterval resample
+global NET DATA numSamples warpFactorLevel vigilance bias learningRate maxNumCategories maxNumIterations sampleInterval resample
 
 % OBTAINING NETWORK PARAMETERS
+h = findobj('Tag', 'warpFactorLevel');
+warpFactorLevel = str2num(get(h, 'String'));
+
 h = findobj('Tag', 'vigilance');
 vigilance = str2num(get(h, 'String'));
 
@@ -212,7 +215,4 @@ h = findobj('Tag', 'Runmenu');
 set(h, 'Enable', 'on');
 h = findobj('Tag', 'Plotmenu');
 set(h, 'Enable', 'on');
-h = findobj('Tag', 'Plot2menu');
-set(h, 'Enable', 'on');
 return
-
