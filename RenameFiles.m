@@ -1,6 +1,6 @@
 newPrefix = 'sub7_';
 
-folder_name = uigetdir('C:\Users\jno\OneDrive - University of St Andrews\Documents\Projects\Valencia\results\ctr\ctr_subset_results\VP91','Select folder containing files to rename');
+folder_name = uigetdir('C:\Projects\Valencia\results\ctr\ctr_subset_results','Select folder containing files to rename');
 if (~folder_name); return; end;
 cd (folder_name);
 

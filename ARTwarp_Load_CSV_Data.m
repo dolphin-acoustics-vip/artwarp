@@ -6,6 +6,7 @@ function ARTwarp_Load_CSV_Data
 global DATA numSamples tempres
 
 path = uigetdir('*.ctr', 'Select the folder containing the contour files');
+eval(['cd ' path]);
 path = [path '/*csv'];
 DATA = dir(path);
 DATA = rmfield(DATA,'date');
@@ -19,7 +20,7 @@ for c1 = 1:numSamples
     % csvread only works with numeric values.  The frequency should be in
     % the second column
    % test=csvread(DATA(c1).name,0,0);    %this is if you don't want it to skip the header row...IS THAT RIGHT??
-    test=csvread(fullfile(DATA(c1).folder, DATA(c1).name),1,0);   %this is if you want it to skip the
+    test=csvread(DATA(c1).name,1,0);   %this is if you want it to skip the
     %header row
     freqContour = test(:,1);
     DATA(c1).ctrlength = freqContour(length(freqContour))/1000;
