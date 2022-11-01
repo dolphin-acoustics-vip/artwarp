@@ -1,8 +1,13 @@
 % This function loads all .ctr files in a user-selected directory into a DATA array 
+
+% Additional comments added by WF 8/7/2022 to help us newbies
+
 function ARTwarp_Load_Data
 
 global DATA numSamples tempres
 
+% user selects folder that contains .ctr files and changes the active
+% directory to this location and only sees .ctr files
 path = uigetdir('*.ctr', 'Select the folder containing the contour files');
 path = [path '/*ctr'];
 DATA = dir(path);
@@ -34,12 +39,12 @@ for c1 = 1:numSamples
         DATA(c1).length = length(freqContour)-1;
         DATA(c1).contour = freqContour(1:DATA(c1).length);
     end
-    if exist('tempres', 'var')
+    if exist('tempres', 'var') %if the variable 'tempres' exists (because it was entered in the ARTwarp_Get_Parameters.m file), make this the value in the DATA.tempres field
         DATA(c1).tempres = tempres;
     else
-        DATA(c1).tempres = DATA(c1).ctrlength/DATA(c1).length;
+        DATA(c1).tempres = DATA(c1).ctrlength/DATA(c1).length; %if it doesn't, tempres is found by using ctrlength divided by length
     end
-    DATA(c1).category = 0;
+    DATA(c1).category = 0; %category name set to 0 for the active contour
 end
-h = findobj('Tag', 'Runmenu');                                                                                                                        
-set(h, 'Enable', 'on'); 
+h = findobj('Tag', 'Runmenu'); %find the object Runmenu (which is in ARTwarp.m)                                                                                                                        
+set(h, 'Enable', 'on'); %change its property to on so the menu in the ARTwarp window will be undimmed

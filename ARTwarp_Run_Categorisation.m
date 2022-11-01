@@ -3,8 +3,10 @@ function ARTwarp_Run_Categorisation
 global NET DATA numSamples warpFactorLevel vigilance bias learningRate maxNumCategories maxNumIterations sampleInterval resample
 
 % OBTAINING NETWORK PARAMETERS
+% loading all the variables that were set in 'ARTwarp_Get_Parameters'
+
 h = findobj('Tag', 'warpFactorLevel');
-warpFactorLevel = str2num(get(h, 'String'));
+warpFactorLevel = str2num(get(h, 'String'))
 
 h = findobj('Tag', 'vigilance');
 vigilance = str2num(get(h, 'String'));
@@ -35,20 +37,21 @@ if resample == 1
     end
 end
 
+% close the 'parametersGUI' window
 h = findobj('Tag','parameterGUI');
 close(h)
 
 
 % INITIALIZING NETWORK
-lengths = round([DATA.length]./4);
+lengths = round([DATA.length]./4); %not sure why this is divided by 4
 n = round(mean(lengths));
-p = max([DATA.length]);
-mx = max([DATA.contour]);
-mn = min([DATA.contour]);
-Xmax = n;
-Ymax = mean([DATA.contour]);
+p = max([DATA.length]); %maximum number of data points of all contours
+mx = max([DATA.contour]); %maximum frequency value of all contours
+mn = min([DATA.contour]); %minimum frequency value of all contours
+Xmax = n; %will be used to set maximum value of X-axis (time) of contour graph
+Ymax = mean([DATA.contour]); % will be used to set maximum value of Y-axis (frequency) on contour graph
 % Create and initialize the weight matrix.
-weight = ones(p, 0);
+weight = ones(p, 0); %create an empty matrix 'weight' with p rows (max of DATA.length/equal to # of points of longest contour)
 
 % Create the structure and return.
 NET = struct('numFeatures', {p}, 'numCategories', {0}, 'maxNumCategories', {maxNumCategories}, 'weight', {weight}, ...
@@ -58,27 +61,27 @@ NET = struct('numFeatures', {p}, 'numCategories', {0}, 'maxNumCategories', {maxN
 ARTwarp_Create_Figure
 
 % TRAINING
-[x, sortedRandom] = sort(randn(numSamples, 1));
+[x, sortedRandom] = sort(randn(numSamples, 1)); %randomize the list of contours
 % Go through the data once for every iteration.
 for iterationNumber = 1:NET.maxNumIterations
     
     % This variable will allow us to see whether new categories were
     % added during the current iteration.
     % Initialize the number of added categories to 0.
-    numChanges = 0;
+    numChanges = 0; 
     % Classify and learn on each sample.
     for indexNumber = 1:numSamples
-        sampleNumber =sortedRandom(indexNumber);
-        % Get the current data sample.
-        currentData = DATA(sampleNumber).contour';
-        currentLength = length(currentData);
-        currentName = DATA(sampleNumber).name;
-        oldCategory = DATA(sampleNumber).category;
+        sampleNumber =sortedRandom(indexNumber); 
+        % Get the current data sample, stepping through the randomized list in order.
+        currentData = DATA(sampleNumber).contour'; %contour vector of the active contour
+        currentLength = length(currentData); %length of this contour
+        currentName = DATA(sampleNumber).name; %name of this contour
+        oldCategory = DATA(sampleNumber).category; %name of the category it is currently assigned to prior to comparison (initialized at 0)
         
         % Activate the categories for this sample.
         % This is equivalent to bottom-up processing in ART.
         bias = NET.bias;
-        categoryActivation = ARTwarp_Activate_Categories(currentData, NET.weight, bias);
+        categoryActivation = ARTwarp_Activate_Categories(currentData, NET.weight, bias); %currentData in this function is the contour vector of the active contour (input)
         
         % Rank the activations in order from highest to lowest.
         % This will allow us easier access to step through the categories.
@@ -189,28 +192,29 @@ for iterationNumber = 1:NET.maxNumIterations
         fprintf('Iteration %d\n', iterationNumber)
         fprintf('Whistle %2.0f\n', indexNumber);
         fprintf('Number of whistles reclassified %2.0f\n', numChanges);
+        %print statements below added by WF 15/05/2022
+        fprintf('Contour Name: %s\n', currentName);
+        
     end
     % If no new categories were added, and no inputs were reclassified in the current iteration
     % then we've reached equilibrium. Thus, we can stop training.
     if numChanges == 0
         break;
     end  
-    %%added save info into this loop so that data is saved after every
-    %%iteration (JNO 23/02/2018)
+      %%added save info into this loop so that data is saved after every
+    %%iteration (JNO 23/02/2018) 
+    %added iteration number to the name so that a new mat file is saved
+    %after every iteration, not overwritten. Also changed 'eval' to 'save'. (WF 9/25/22)
     %fprintf('Finished iteration number %d\n', iterationNumber)
     %fprintf('Number of whistles reclassified %2.0f\n', numChanges);
-    name = sprintf('%3.1f', NET.vigilance);
-    name(end-1) = '_';
-    pad = '00000';
-    pad(end-length(name)+1:end) = name;
-    eval(['save ARTwarp' pad ' DATA NET iterationNumber']);
+    formatSpec = 'ARTwarp%02.0fit%03.0f'; 
+    name = sprintf(formatSpec,NET.vigilance, iterationNumber);
+    save(name);
 end
 fprintf('The number of iterations needed was %d\n', iterationNumber);
-name = sprintf('%3.1f', NET.vigilance);
-name(end-1) = '_';
-pad = '00000';
-pad(end-length(name)+1:end) = name;
-eval(['save ARTwarp' pad ' DATA NET iterationNumber']);
+formatSpec = 'ARTwarp%02.0fFINAL';
+endname = sprintf(formatSpec,NET.vigilance);
+save(endname);
 h = findobj('Tag', 'Runmenu');
 set(h, 'Enable', 'on');
 h = findobj('Tag', 'Plotmenu');
