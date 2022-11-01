@@ -1,22 +1,24 @@
 % The variable freqCol (below) is the column containing the frequency values in the
 % csv file.
-freqCol = 2;
+freqCol = 1; %should be 1 for pulse trains and 2 for whistles from ROCCA
 
 
-tempres=0.011 %Modify it according to the files - This is the value I used for the Valencia analysis
+%tempres=0.011 %Modify it according to the files - This is the value I used for the Valencia analysis
 %tempres=0.012 %Modify it according to the files - This is the value I used for the Southall delphinus analysis
+tempres=0.010 %Modify it according to the files - This is the value I used for Units/whistles
 
-folder_name = uigetdir('C:\Users\mo55\Documents\Work\Artwarp-tempres'); %Code for selecting the folder
-if (~folder_name); return; end;
+folder_name = uigetdir(); %Code for selecting the folder
+if (~folder_name); return; end
 cd (folder_name);
 
 % loop through the txt files in the folder
-fileList = dir([folder_name '\\*.csv']);
+fileList = dir([folder_name '//*.csv']);
 
 
 for i=1:length(fileList) 
     curFile = fileList(i).name;
-    allCols = csvread(curFile,1,0);
+    curFile
+    allCols = csvread(curFile,1,0); %use for whistle contour files
     freqContour=allCols(:,freqCol)';
 %    Ia(i)= ([fileList([2,i]), i]); %To select the second column of fileList i.e. the csv files in the folder for i rows????
 %    fcontour=Ia(2,i)'; % Define fcontour as the second column of the csv files 
