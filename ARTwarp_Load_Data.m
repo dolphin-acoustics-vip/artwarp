@@ -17,7 +17,7 @@ DATA = rmfield(DATA,'bytes');
 DATA = rmfield(DATA,'isdir');
 [numSamples x] = size(DATA);
 
-% this line is needed to ctrick Matlab into beleiving that fcontour is a
+% this line is needed to trick Matlab into beleiving that fcontour is a
 % variable (which it will be soon) and to stop it trying to use the built
 % in graphics function fcontour(...)
 fcontour = 0;
