@@ -4,6 +4,7 @@ close gcf
 
 load Transient081_2-train
 
+% Go to directory
 cd C:\matlab\work
 DATA = dir('C:\MATLAB\work\*.ctr');
 DATA = rmfield(DATA,'date');
