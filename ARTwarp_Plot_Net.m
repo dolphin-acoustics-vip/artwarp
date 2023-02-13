@@ -1,5 +1,7 @@
 function ARTwarp_Plot_Net
 
+% TODO: Rename uimenu variable names to be more descriptive
+
 global NET DATA
 h0 = findobj('Tag','ARTwarp');
 clf
