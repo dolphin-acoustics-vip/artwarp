@@ -1,4 +1,4 @@
-classdef Load_Data
+classdef Load_Data %< Run_Categorisation
     %   LOAD_DATA This class contains the functions to load the data into the
     %   app, whether it is in CTR or CSV format
 
@@ -6,6 +6,7 @@ classdef Load_Data
           DATA  % Holds the data which is loaded 
           fileType  % Holds the types of file to be used (in this case CSV or CTR)
           path  % Holds the path to the files in question on your device
+          numsamples
     end
 
     methods (Static)
@@ -24,9 +25,11 @@ classdef Load_Data
             if fileType == '/*ctr' %#ok<*BDSCA> (this comment just tells MATLAB that this line of code is okay)
                 data = Load_Datatype.ARTwarp_Load_CTR_Data(path);
                 obj.DATA = data.data;
+                obj.numsamples = data.numSamples;
             elseif fileType == '/*csv'
                 data = Load_Datatype.ARTwarp_Load_CSV_Data(path);
                 obj.DATA = data.data;
+                obj.numsamples = data.numSamples;
             end
         end
     end

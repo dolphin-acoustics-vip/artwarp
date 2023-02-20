@@ -4,6 +4,7 @@ classdef Load_Datatype < Load_Data
 
     properties (Access = public)
           data % Holds the data which is loaded
+          numSamples
     end
 
     methods (Static)
@@ -13,9 +14,9 @@ classdef Load_Datatype < Load_Data
             %Assign this data variable to be the directory (list of files) of the folder in path. This has a number of unneeded columns which are also removed by this rmfield() function.
             obj.data = rmfield(dir(path),{'date', 'datenum', 'bytes', 'isdir'}); 
 
-            [numSamples, ~] = size(obj.data);
+            [obj.numSamples, ~] = size(obj.data);
 
-            for c1 = 1:numSamples
+            for c1 = 1:obj.numSamples
                 %Here we extract the relevant data to use (potentially this
                 %can be rewritten into a seperate function?)
 
@@ -37,9 +38,9 @@ classdef Load_Datatype < Load_Data
             %Assign this data variable to be the directory (list of files) of the folder in path. This has a number of unneeded columns which are also removed by this rmfield() function.
             obj.data = rmfield(dir(path),{'date', 'datenum', 'bytes', 'isdir'}); 
 
-            [numSamples, ~] = size(obj.data);
+            [obj.numSamples, ~] = size(obj.data);
 
-            for c1 = 1:numSamples
+            for c1 = 1:obj.numSamples
                 clear tempres
                 clear ctrlength
                 clear fcontour
@@ -69,8 +70,8 @@ classdef Load_Datatype < Load_Data
         function obj = ARTwarp_Load_TXT_Data(path)
 
             obj.data = rmfield(dir(path),{'date', 'datenum', 'bytes', 'isdir'}); %Assigns this DATA variable to be the directory (list of files) of the folder in path. This has a number of unneeded columns which are removed here
-            [numSamples, ~] = size(obj.data); %This finds the number of contours in the folder and assigns it to the variable numSample
-            for c1 = 1:numSamples
+            [obj.numSamples, ~] = size(obj.data); %This finds the number of contours in the folder and assigns it to the variable numSample
+            for c1 = 1:obj.numSamples
     
                 % make sure to skip the header row, since it has characters in it and
                 % csvread only works with numeric values.  The frequency should be in
