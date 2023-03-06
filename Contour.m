@@ -4,14 +4,13 @@ classdef Contour
 
     properties
         frequencies % An array of raw frequency values
-        attributes  % A ContourAttributes instance
+        tempres % Sample rate of frequency
     end
 
     methods
         function cont = Contour(freq)
-            % Construct a contour instance from the given frequency array
-            cont.frequencies = freq;
-            cont.attributes  = ContourAttributes(freq);
+            cont.frequencies = freq.frequency; % frequency component of csv
+            cont.tempres  = freq.tempres; % tempres componenent of the csv
         end
     end
 end
