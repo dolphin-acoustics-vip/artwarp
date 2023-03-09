@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7713614.svg)](https://doi.org/10.5281/zenodo.7713614)
+
 # ARTwarp 
 
 ARTwarp is a MATLAB-based programme for the automated categorisation of tonal
