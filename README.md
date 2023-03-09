@@ -53,6 +53,14 @@ with contributions by
 - Wendi Fellner
 
 
+## License
+
+ARTwarp is distributed under the terms of the GNU Lesser General Public
+License, version 3, as published by the Free Software Foundation. For
+details, please refer to the LICENSE file in the root directory of the
+ARTwarp distribution or see https://www.gnu.org/licenses/lgpl.
+
+
 ## References
 
 1. Buck, J. R. & Tyack, P. L. 1993. A quantitative measure of similarity for 
