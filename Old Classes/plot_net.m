@@ -25,9 +25,7 @@ classdef plot_net
             obj.num_features   = NET.numFeatures;
             obj.fig            = figure(ToolBar="none", ...
                                         Name="Plot Net", ...
-                                        Visible="on", ...
                                         WindowState="maximized");
-            obj.plot_overlap();
         end
     end
     methods
@@ -55,6 +53,21 @@ classdef plot_net
                 end
                 hold off
             end
+        end
+
+        function plot_single(obj, category)
+            close all;
+            reset(gcf);
+            plot(1:obj.num_features, obj.weight(:,category), "r", LineWidth=1);
+            title("Category " + category);
+            hold on
+            contours_indexes = find([obj.DATA.category] == category);
+            for contour_index = contours_indexes
+                % plot overlapped
+                contour = obj.DATA(contour_index).contour;
+                plot(1:length(contour), contour, Color=[0, 0, 0, 0.2]);
+            end
+            hold off
         end
 
         function iterate(obj)
