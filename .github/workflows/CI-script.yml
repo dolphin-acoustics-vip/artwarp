@@ -1,5 +1,7 @@
 name: Scripted tests
-on: [push]
+on: 
+  pull_request:
+  push:
 jobs:
   my-job:
     name: Run one script
