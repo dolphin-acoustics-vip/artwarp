@@ -3,14 +3,18 @@ classdef Contour
     % Holds the raw frequency values as well as extrapolated variables
 
     properties
-        frequencies % An array of raw frequency values
+        frequency % An array of raw frequency values
         tempres % Sample rate of frequency
+        length
+        category
+        warpFunction
     end
 
-    methods
-        function cont = Contour(freq)
-            cont.frequencies = freq.frequency; % frequency component of csv
-            cont.tempres  = freq.tempres; % tempres componenent of the csv
+    methods (Static)
+        function obj = Contour(frequency, tempres, length)
+            obj.frequency = frequency; % frequency component of csv
+            obj.tempres  = tempres; % tempres componenent of the csv
+            obj.length = length;
         end
     end
 end
