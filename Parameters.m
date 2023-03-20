@@ -14,16 +14,8 @@ classdef Parameters
         warpFactor {mustBeNumeric} = 3
     end
 
-    methods
-        function obj = AssignParameters(inputParameters)
-                    obj.bias = inputParameters.bias;
-                    obj.learningRate = inputParameters.learningRate;
-                    obj.maxNumCategories = inputParameters.maxNumCategories;
-                    obj.maxNumIterations = inputParameters.maxNumIterations;
-                    obj.resample = inputParameters.resample;
-                    obj.sampleInterval = inputParameters.sampleInterval;
-                    obj.vigilance = inputParameters.vigilance;
-                    obj.warpFactor = inputParameters.warpFactor;
+    methods (Static)
+        function obj = Parameters()
         end
     end
 end

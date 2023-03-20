@@ -4,19 +4,12 @@ classdef Network
     %   repertoire through refinement with training data
     
     properties
-        parameters % User-specified parameters
-        categories % The list of neurons (categories)
-                   % This grows as previously unseen contours are added
+        weight
     end
     
     methods
-        function net = Network(parameters, categories)
-            % Construct an empty or populated instance
-            %   Categories can be an empty array (if this neural network is
-            %   to be trained from scratch), or already contain some
-            %   objects (perhaps loaded from a previous training session)
-            net.parameters = parameters;
-            net.categories = categories;
+        function obj = Network(weight)
+            obj.weight = weight;
         end
         
         function add(contour)
