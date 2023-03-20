@@ -1,0 +1,10 @@
+addpath("../")
+parameters = Parameters();
+assert(parameters.bias == 1.0000e-06, "Parameter bias not correct")
+assert(parameters.learningRate == 0.1000, "Parameter learningRate not correct")
+assert(parameters.maxNumCategories == 56, "Parameter maxNumCategories not correct")
+assert(parameters.maxNumIterations == 100, "Parameter maxNumIterations not correct")
+assert(parameters.resample == 0, "Parameter resample not correct")
+assert(parameters.sampleInterval == 0.0100, "Parameter sampleInterval not correct")
+assert(parameters.vigilance == 90, "Parameter vigilance not correct")
+assert(parameters.warpFactor == 3, "Parameter warpFactor not correct")

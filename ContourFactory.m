@@ -2,10 +2,14 @@
 
 classdef ContourFactory    
     methods (Static)
-        function contours_shuffled = load_contours()
-            path = cd + "/Test_Data"; % temporarily the subdirectory ./Test_Data
+        function contours_shuffled = load_contours(varargin)
+            if length(varargin) == 1
+                dir_path = varargin{1};
+            else
+                dir_path = cd + "/Test_Data"; % temporarily the subdirectory ./Test_Data
+            end
             % path = uigetdir('Select the folder containing the contour files') % loads folder
-            contours = [ ContourFactory.getCSV(path), ContourFactory.getCTR(path) ];
+            contours = [ ContourFactory.getCSV(dir_path), ContourFactory.getCTR(dir_path) ];
             shuffled_index = randperm(size(contours, 2));
             contours_shuffled = contours;
             contours_shuffled(1, shuffled_index) = contours(1,:);
@@ -33,9 +37,9 @@ classdef ContourFactory
             for i = 1:length(files)
                 file_path = fullfile(dir_path, char(files(i)));
                 contents = load(file_path, "-mat");
-                frequency = contents.freqContour;
+                frequency = transpose(contents.freqContour);
                 tempres = contents.tempres;
-                ctrLen = size(frequency, 2);
+                ctrLen = size(frequency, 1);
                 contours = [contours, Contour(frequency, tempres, ctrLen)];
             end
         end
