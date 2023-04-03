@@ -1,9 +1,10 @@
 classdef NetworkFactory
-    % Summary of this class goes here
+    % A factory to initialise the network to be used within an ARTwarp run.
     %   Detailed explanation goes here
     
     methods (Static)
         function net = new_network(contours)
+            % Creates an empty 
             weight = ones(max([contours.length]), 0);
             net = Network(weight);
         end

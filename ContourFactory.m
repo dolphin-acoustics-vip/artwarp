@@ -1,6 +1,9 @@
-% A factory to construct contour objects from various sources.
+% A factory to import contour objects from a directory containing a dataset
+% Ideally, this file should be ignored and only the created Contour objects
+%   interacted with.
+% Datasets can contain both CSV and CTR files
 
-classdef ContourFactory    
+classdef ContourFactory
     methods (Static)
         function contours_shuffled = load_contours(varargin)
             if length(varargin) == 1

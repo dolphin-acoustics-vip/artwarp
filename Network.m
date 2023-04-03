@@ -4,14 +4,15 @@ classdef Network
     %   repertoire through refinement with training data
     
     properties
-        weight
+        weights
+        
     end
     
     methods
-        function obj = Network(weight)
-            obj.weight = weight;
+        function obj = Network(weights)
+            obj.weights = weights;
         end
-        
+
         function add(contour)
             % Add a contour object to the network
             %   Iterates through the current categories and adds the
