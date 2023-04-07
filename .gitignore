@@ -1,6 +1,9 @@
 # Windows default autosave extension
 *.asv
 
+# Compiled standalone applications
+*standaloneApplication
+
 # "data" is the location for all locally stored testing data
 data
 
