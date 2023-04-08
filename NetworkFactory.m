@@ -5,8 +5,8 @@ classdef NetworkFactory
     methods (Static)
         function net = new_network(contours)
             % Creates an empty 
-            weight = ones(max([contours.length]), 0);
-            net = Network(weight);
+            weights = ones(max([contours.length]), 0);
+            net = Network(weights);
         end
 
         function load_network
