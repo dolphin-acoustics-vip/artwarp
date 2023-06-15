@@ -1,4 +1,0 @@
-To run the CLI after making changes (until we create a finalised 
-executable), run `CLI = compiler.build.standaloneApplication("CLI.m")` in 
-MATLAB, and then run it from the MATLAB command line (e.g. `CLI train -l 
-some_path`)
