@@ -14,17 +14,7 @@ similarity with an Adaptive Resonance Theory (ART) neural network to group sound
 into different categories. The programme provides categorisation details, as well 
 as a reference contour representing the typical frequency shape of each category.
 
-The code has been run successfully using Matlab 2016a and 2016b.
-
-- `ARTwarp_csv.m` provides the option to open `.ctr` (Beluga) and `.csv` files
-
-- `ARTwarp_txt.m` provides the option to open `.ctr` (Beluga), `.csv`, and also `.txt` files
-
-This version of `ARTwarp_txt` displays the iteration number and number of whistles 
-analysed in the command window while ARTwarp is running. It saves the results at 
-the end of each iteration.
-
-For further instructions on installing MATLAB and running ARTwarp, see 
+For further instructions on installing MATLAB and running the latest release of ARTwarp, see 
 the ARTwarp Wiki: https://github.com/dolphin-acoustics-vip/artwarp/wiki
 
 
