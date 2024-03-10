@@ -26,12 +26,32 @@ classdef Category
         function add(contour)
             % Update the reference contour with the given new contour and
             % increment the size
-            % TODO
+            cat.reference = average(contour);
+            cat.size = cat.size + 1;
         end
 
         function remove(contour)
             % Update the reference contour to remove the given contour and
             % decrement the size
+            cat.reference = unaverage(contour);
+            cat.size = cat.size - 1;
+
+            % If the number of contours in the category drops below 1,
+            % empty the reference contour
+            if cat.size == 0
+                cat.reference = [];
+            end
+        end
+
+        function avg = average(contour)
+            % Calculate the reference contour for the category with a new
+            % contour added
+            % TODO
+        end
+
+        function avg = unaverage(contour)
+            % Calculate the reference contour for the category with an old
+            % contour removed
             % TODO
         end
     end
