@@ -23,14 +23,14 @@ classdef Category
             % TODO
         end
 
-        function add(contour)
+        function cat = add(cat, contour)
             % Update the reference contour with the given new contour and
             % increment the size
             cat.reference = average(contour);
             cat.size = cat.size + 1;
         end
 
-        function remove(contour)
+        function cat = remove(cat, contour)
             % Update the reference contour to remove the given contour and
             % decrement the size
             cat.reference = unaverage(contour);
