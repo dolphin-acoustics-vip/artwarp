@@ -15,7 +15,7 @@ classdef Network
             obj.weights = weights;
         end
 
-        function obj = add(obj, contour)
+        function obj = update_network(obj, contour)
             % Add a contour object to the network
             %   Iterates through the current categories and adds the
             %   contour to the one it is most similar to; if it matches
@@ -29,19 +29,25 @@ classdef Network
                 new_category = Category.category(1, contour);
                 obj = obj.add_category(new_category);
 
+                % Reassign category of contour
+                contour.category = new_category;
+
                 % If the contour was already in a category, remove it
                 if(contour.category) ~= 0
-                    obj.categories(contour.category) = obj.categories(contour.category).remove(contour);
+                    obj.categories(contour.category) = obj.categories(contour.category).remove(contour.category, contour);
                 end
                 
                 % Increment number of reclassifications
                 obj.reclassifications = obj.reclassifications + 1;
             elseif matched_category ~= contour.category
                 % Remove from old category
-                obj.categories(contour.category) = obj.categories(contour.category).remove(contour);
+                obj.categories(contour.category) = obj.categories(contour.category).remove(contour.category, contour);
 
                 % Add to new category
-                obj.categories(matched_category) = obj.categories(matched_category).add(contour);
+                obj.categories(matched_category) = obj.categories(matched_category).add(contour.category, contour);
+
+                % Alter category property of contour
+                contour.category = matched_category;
 
                 % Increment number of reclassifications
                 obj.reclassifications = obj.reclassifications + 1;

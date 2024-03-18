@@ -31,4 +31,4 @@ cat.remove(cat, contours(1));
 
 % Assert size is now 0 and reference contour is empty
 assert(cat.size == 0, "Problem with decreasing size after removal of contour");
-assert(cat.reference == [], "Problem with emptying reference contour when category is empty")
+assert(cat.reference == [], "Problem with emptying reference contour when category is empty");

@@ -26,14 +26,14 @@ classdef Category
         function cat = add(cat, contour)
             % Update the reference contour with the given new contour and
             % increment the size
-            cat.reference = average(contour);
+            cat.reference = cat.average(contour);
             cat.size = cat.size + 1;
         end
 
         function cat = remove(cat, contour)
             % Update the reference contour to remove the given contour and
             % decrement the size
-            cat.reference = unaverage(contour);
+            cat.reference = cat.unaverage(contour);
             cat.size = cat.size - 1;
 
             % If the number of contours in the category drops below 1,
