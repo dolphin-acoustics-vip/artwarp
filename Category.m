@@ -43,16 +43,18 @@ classdef Category
             end
         end
 
-        function avg = average(contour)
+        function avg = average(cat, contour)
             % Calculate the reference contour for the category with a new
             % contour added
             % TODO
+            avg = cat.reference;
         end
 
-        function avg = unaverage(contour)
+        function avg = unaverage(cat, contour)
             % Calculate the reference contour for the category with an old
             % contour removed
             % TODO
+            avg = cat.reference;
         end
     end
 end
