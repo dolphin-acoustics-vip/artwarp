@@ -13,15 +13,17 @@ classdef Network
     methods
         function obj = Network(weights)
             obj.weights = weights;
+            obj.num_categories = 0;
+            obj.categories = [];
         end
 
-        function obj = update_network(obj, contour)
+        function obj = update_network(obj, contour, parameters)
             % Add a contour object to the network
             %   Iterates through the current categories and adds the
             %   contour to the one it is most similar to; if it matches
             %   none of them, create a new category for the contour
             
-            matched_category = find_category(obj, contour);
+            matched_category = find_category(obj, contour, parameters);
 
             % If there is no category the contour fits into, create a new
             % one, with the contour as the reference for it.
@@ -55,7 +57,7 @@ classdef Network
             
         end
 
-        function matched_category = find_category(obj, contour)
+        function matched_category = find_category(obj, contour, parameters)
             % Find the category the new contour fits into
 
             % If there are no categories, a new one must be created
@@ -72,7 +74,7 @@ classdef Network
                 % vigilance, return 0 if not
                 [max_match, matched_category] = max(a);
 
-                if max_match < Parameters.vigilance
+                if max_match < parameters.vigilance
                     matched_category = -1;
                 end
             end

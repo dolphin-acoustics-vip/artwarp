@@ -17,7 +17,8 @@ classdef Category
             cat.reference = reference;
         end
 
-        function val = compare(contour)
+        function val = compare(cat, contour)
+            val = 0;
             % Compare a given contour object with the reference contour and
             % return a percentage match value
             % TODO
