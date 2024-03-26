@@ -22,7 +22,8 @@ classdef Network
             %   Iterates through the current categories and adds the
             %   contour to the one it is most similar to; if it matches
             %   none of them, create a new category for the contour
-            
+
+            % Find category in network that contour fits into
             matched_category = find_category(obj, contour, parameters);
 
             % If there is no category the contour fits into, create a new
@@ -31,7 +32,7 @@ classdef Network
                 new_category = Category.category(1, contour);
                 obj = obj.add_category(new_category);
 
-                % Reassign category of contour
+                % Alter category property of contour
                 contour.category = new_category;
 
                 % If the contour was already in a category, remove it
@@ -42,7 +43,7 @@ classdef Network
                 % Increment number of reclassifications
                 obj.reclassifications = obj.reclassifications + 1;
             elseif matched_category ~= contour.category
-                % Remove from old category
+                % Remove from old category if moved to new category
                 obj.categories(contour.category) = obj.categories(contour.category).remove(contour.category, contour);
 
                 % Add to new category
@@ -58,20 +59,22 @@ classdef Network
         end
 
         function matched_category = find_category(obj, contour, parameters)
-            % Find the category the new contour fits into
+            % Find the category a new contour fits into
 
-            % If there are no categories, a new one must be created
+            % If there are no categories, no match found (-1 returned)
             if obj.num_categories == 0
                 matched_category = -1;
             else
                 % Create array for storing matches
                 a = zeros(1, obj.num_categories);
+
+                % Calculate matches
                 for i = 1:obj.num_categories
                     a(i) = obj.categories(i).compare(contour);
                 end
 
                 % Find max match percentage and see if it is above
-                % vigilance, return 0 if not
+                % vigilance, return -1 if not
                 [max_match, matched_category] = max(a);
 
                 if max_match < parameters.vigilance
@@ -81,7 +84,10 @@ classdef Network
         end
 
         function obj = add_category(obj,cat)
+            % Add new category to categories list in Network
             obj.categories = [obj.categories, cat];
+            
+            % Increase number of categories in the Network
             obj.num_categories = obj.num_categories + 1;
         end
     end
