@@ -48,6 +48,8 @@ classdef Category
             % Calculate the reference contour for the category with a new
             % contour added
             % TODO
+
+            % Temporary, for testing purposes
             avg = cat.reference;
         end
 
@@ -55,6 +57,8 @@ classdef Category
             % Calculate the reference contour for the category with an old
             % contour removed
             % TODO
+
+            % Temporary, for testing purposes
             avg = cat.reference;
         end
     end
