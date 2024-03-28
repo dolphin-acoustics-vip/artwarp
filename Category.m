@@ -17,22 +17,49 @@ classdef Category
             cat.reference = reference;
         end
 
-        function val = compare(contour)
+        function val = compare(cat, contour)
+            val = 0;
             % Compare a given contour object with the reference contour and
             % return a percentage match value
             % TODO
         end
 
-        function add(contour)
+        function cat = add(cat, contour)
             % Update the reference contour with the given new contour and
             % increment the size
-            % TODO
+            cat.reference = cat.average(contour);
+            cat.size = cat.size + 1;
         end
 
-        function remove(contour)
+        function cat = remove(cat, contour)
             % Update the reference contour to remove the given contour and
             % decrement the size
+            cat.reference = cat.unaverage(contour);
+            cat.size = cat.size - 1;
+
+            % If the number of contours in the category drops below 1,
+            % empty the reference contour
+            if cat.size == 0
+                cat.reference = [];
+            end
+        end
+
+        function avg = average(cat, contour)
+            % Calculate the reference contour for the category with a new
+            % contour added
             % TODO
+
+            % Temporary, for testing purposes
+            avg = cat.reference;
+        end
+
+        function avg = unaverage(cat, contour)
+            % Calculate the reference contour for the category with an old
+            % contour removed
+            % TODO
+
+            % Temporary, for testing purposes
+            avg = cat.reference;
         end
     end
 end
