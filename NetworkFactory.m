@@ -15,8 +15,10 @@ classdef NetworkFactory
         end
 
         function net = run_categorisation(network, contours, parameters)
-            % This will run the network and contours until they have been
-             % correctly categorised
+            % This will run the network until all contours have been
+             % categorised and an iteration has completed with no reclassifications
+
+            % NOTE: contour list should be randomised before entered into this function
 
             network.reclassifications = 0;
             iteration_number = 1;
@@ -27,7 +29,7 @@ classdef NetworkFactory
                 % zero
                 network.reclassifications = 0;
 
-                % Run through this iteration
+                % Run through this iteration, updating the network with each contour in the list
                 for i = 1:length(contours)
                     network = network.update_network(contours(i), parameters);
                 end
@@ -35,12 +37,13 @@ classdef NetworkFactory
                 % Increment iteration number
                 iteration_number = iteration_number + 1;
 
-                % Break out of loop if no reclassifications done
+                % Break out of loop if no reclassifications done (categorisation complete)
                 if network.reclassifications == 0
                     a = 1;
                 end
             end
 
+            % assign net as completed network
             net = network;
         end
         
