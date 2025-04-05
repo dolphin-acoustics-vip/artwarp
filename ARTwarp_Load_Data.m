@@ -44,8 +44,8 @@ for c1 = 1:numSamples
     else
         DATA(c1).tempres = DATA(c1).ctrlength/DATA(c1).length; %if it doesn't, tempres is found by using ctrlength divided by length
     end
-    if exist('countourID', 'var') %if the variable 'countourID' exists, make this the value in the DATA.contourID field
-        DATA(c1).countourID = countourID;
+    if exist('contourID', 'var') %if the variable 'contourID' exists, make this the value in the DATA.contourID field
+        DATA(c1).contourID = contourID;
     end
     DATA(c1).category = 0; %category name set to 0 for the active contour
 end
