@@ -46,6 +46,7 @@ for c1 = 1:numSamples
     end
     if exist('countourID', 'var') %if the variable 'countourID' exists, make this the value in the DATA.contourID field
         DATA(c1).countourID = countourID;
+    end
     DATA(c1).category = 0; %category name set to 0 for the active contour
 end
 h = findobj('Tag', 'Runmenu'); %find the object Runmenu (which is in ARTwarp.m)                                                                                                                        
