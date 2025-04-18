@@ -44,7 +44,17 @@ for c1 = 1:numSamples
     else
         DATA(c1).tempres = DATA(c1).ctrlength/DATA(c1).length; %if it doesn't, tempres is found by using ctrlength divided by length
     end
+
     DATA(c1).category = 0; %category name set to 0 for the active contour
+
+    DATA(c1).match = []; %match set initially to a null value (empty array) for the active contour
+
+    if exist('id', 'var') % if the variable 'id' exists, make this the value in the DATA.id field (this forms a unique identifier for each contour)
+        DATA(c1).id = id;
+        clear id; % then clear the id variable to avoid all subsequent contours being assigned the same ID!
+    else
+        DATA(c1).id = []; % otherwise, make the value in the DATA.id field [], to show that no ID has been assigned
+    end
 end
 h = findobj('Tag', 'Runmenu'); %find the object Runmenu (which is in ARTwarp.m)                                                                                                                        
-set(h, 'Enable', 'on'); %change its property to on so the menu in the ARTwarp window will be undimmed
+set(h, 'Enable', 'on'); %change its 'Enable' property to 'on' so the menu in the ARTwarp window will be undimmed
