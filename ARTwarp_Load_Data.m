@@ -26,11 +26,7 @@ for c1 = 1:numSamples
     clear ctrlength
     clear fcontour
     eval(['load ' fullfile(DATA(c1).folder, DATA(c1).name) ' -mat']);
-    if exist('ctrlength', 'var')
-        DATA(c1).ctrlength = ctrlength;
-        DATA(c1).length = length(freqContour);
-        DATA(c1).contour = freqContour;
-    elseif exist('fcontour', 'var')
+    if exist('fcontour', 'var')
         DATA(c1).ctrlength = fcontour(length(fcontour))/1000;
         DATA(c1).length = length(fcontour);
         DATA(c1).contour = fcontour(1:DATA(c1).length);
