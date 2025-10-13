@@ -29,3 +29,6 @@ codegen/
 
 # Octave session info
 octave-workspace
+
+# Matlab binary files used to save network parameters
+*.mat
