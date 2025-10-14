@@ -79,7 +79,7 @@ for i = 2:min([(warpFactorLevel*(warpFactorLevel + 1) - 1) m]) % For the indexes
             if x == 1 % CHECK THIS IS CORRECT INDEXING OF above line - if the maximum previous value came from a vertical step:
                 k(i,j) = 1+k(i-1,j); % increment the number of consecutive vertical steps taken at k(i,j) from k(i-1,j)
             else
-                k(i,j) = 1; % Otherwise, reset the number of consective vertical steps to 1
+                k(i,j) = 1; % Otherwise, reset the number of consecutive vertical steps to 1
             end
             p(i,j) = r2(x); % Update the path matrix to show the horizontal component of the step taken (i.e. 0, -1, ..., -warpFactorLevel)
         end
@@ -97,7 +97,7 @@ for i = 2:min([(warpFactorLevel*(warpFactorLevel + 1) - 1) m]) % For the indexes
             if x == 1 % CHECK THIS IS CORRECT INDEXING OF above line - if the maximum previous value came from a vertical step:
                 k(i,j) = 1+k(i-1,j); % increment the number of consecutive vertical steps taken at k(i,j) from k(i-1,j)
             else
-                k(i,j) = 1; % Otherwise, reset the number of consective vertical steps to 1
+                k(i,j) = 1; % Otherwise, reset the number of consecutive vertical steps to 1
             end
             p(i,j) = r2(x); % Update the path matrix to show the horizontal component of the step taken (i.e. 0, -1, ..., -warpFactorLevel)
         end
@@ -115,7 +115,7 @@ for i = warpFactorLevel*(warpFactorLevel+1):1:m
             if x == 1 % CHECK THIS IS CORRECT INDEXING OF above line - if the maximum previous value came from a vertical step:
                 k(i,j) = 1+k(i-1,j); % increment the number of consecutive vertical steps taken at k(i,j) from k(i-1,j)
             else
-                k(i,j) = 1; % Otherwise, reset the number of consective vertical steps to 1
+                k(i,j) = 1; % Otherwise, reset the number of consecutive vertical steps to 1
             end
             p(i,j) = r2(x); % Update the path matrix to show the horizontal component of the step taken (i.e. 0, -1, ..., -warpFactorLevel)
         end
