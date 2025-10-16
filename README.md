@@ -12,13 +12,12 @@ similarity with an Adaptive Resonance Theory (ART) neural network to group sound
 into different categories. The programme provides categorisation details, as well 
 as a reference contour representing the typical frequency shape of each category.
 
-The code has been run successfully using Matlab 2016a and 2016b.
+- `ARTwarp_csv.m` provides the option to open `.ctr` files. Please note that
+ARTwarp cannot currently read `.csv` files directly, but this functionality
+will hopefully be added soon. Currently, users must run the `TempRes3.m` script to
+first convert `.csv` to `.ctr` files.
 
-- `ARTwarp_csv.m` provides the option to open `.ctr` (Beluga) and `.csv` files
-
-- `ARTwarp_txt.m` provides the option to open `.ctr` (Beluga), `.csv`, and also `.txt` files
-
-This version of `ARTwarp_txt` displays the iteration number and number of whistles 
+This version of `ARTwarp_csv` displays the iteration number and number of whistles 
 analysed in the command window while ARTwarp is running. It saves the results at 
 the end of each iteration.
 
@@ -34,6 +33,23 @@ the ARTwarp Wiki: https://github.com/dolphin-acoustics-vip/artwarp/wiki
 
 - Wiki: https://github.com/dolphin-acoustics-vip/artwarp/wiki
 
+## Getting Started
+
+1. Ensure you have a compatible version of MATLAB. ARTwarp works well with most
+recent versions of MATLAB, but is recommended to run on versions no older than
+2022
+
+2. Download the source code from one of the releases at the releases page here:
+https://github.com/dolphin-acoustics-vip/artwarp/releases. Unpack it in a 
+directory that can be accessed through MATLAB. There is a changes log available
+which lists new functionality and bug fixes added in each release:
+https://github.com/dolphin-acoustics-vip/artwarp/blob/stable-1/CHANGES.md
+
+3. Run ARTwarp according to the wiki here:
+https://github.com/dolphin-acoustics-vip/artwarp/wiki
+
+4. Report any issues, bugs or feature requests to the issue tracker here:
+https://github.com/dolphin-acoustics-vip/artwarp/issues
 
 ## Authors
 
