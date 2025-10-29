@@ -6,35 +6,21 @@ This release focusses on bug fixes and improved documentation.
 
 ### New features
 
--
-
-### Performance improvements
-
-- 
-
-### Improved and extended functionality
-
-- 
-
-### Removed or obsolete functionality
-
--
+- Added a constant field 'id' to the DATA table. This is the basis for future interfacing with OCEAN,
+but does not otherwise change the outputs produced [#72]
 
 ### Fixed bugs that could lead to incorrect results
 
--
+- Fixed warp.m so that changing warpFactorLevel correctly changes the
+maximum warping factor allowed [#77]
 
 ### Fixed bugs that could lead to crashes
 
-- 
-
-### Other fixed bugs
-
-- 
+- Ensured support of ctr files made by Beluga [#74]
 
 ### Other changes
 
-- 
+- Moved some code from .mat files and add .mat files to .gitignore [#83]
 
 
 ## ARTwarp v1.0
