@@ -17,10 +17,6 @@ end
 
 [numFeatures, numCategories] = size(weight);
 
-if((bias < 0) | (bias > 1))
-    error('The bias must be within the range [0, 1].');
-end
-
 % Set up the return variable.
 categoryActivation{1,1} = ones(1, numCategories); %create a matrix that is 1 row x numCategories columns, initialized with ones and returns 1x1 cell array
 

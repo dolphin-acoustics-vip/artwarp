@@ -38,9 +38,6 @@ end
 if((categoryNumber < 1) | (categoryNumber > numCategories))
     error('The category number must be in the range [1, NumCategories].');
 end
-if((learningRate < 0) | (learningRate > 1))
-    error('The learning rate must be within the range [0, 1].');
-end
 
 % UPDATE WEIGHT CONTENT
 newWeight = weight(i, categoryNumber);

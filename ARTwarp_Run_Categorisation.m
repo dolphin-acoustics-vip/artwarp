@@ -26,6 +26,46 @@ maxNumIterations = round(str2num(get(h, 'String')));
 h = findobj('Tag', 'resample');
 resample = get(h, 'Value');
 
+% Input validation --------
+
+% Validate Warp Factor Level
+if isnan(warpFactorLevel) || mod(warpFactorLevel,1) ~= 0 || warpFactorLevel <= 1
+    errordlg('Warp Factor Level must be an integer greater than 1.', 'Invalid Input');
+    return;
+end
+
+% Validate Vigilance
+if isnan(vigilance) || vigilance < 1 || vigilance > 99
+    errordlg('Vigilance must be a number between 1 and 99 inclusive.', 'Invalid Input');
+    return;
+end
+
+% Validate Bias
+if isnan(bias) || bias < 0 || bias > 1
+    errordlg('Bias must be a number between 0 and 1 inclusive.', 'Invalid Input');
+    return;
+end
+
+% Validate Learning Rate
+if isnan(learningRate) || learningRate <= 0 || learningRate > 1
+    errordlg('Learning Rate must be a number between 0 (exclusive) and 1 (inclusive).', 'Invalid Input');
+    return;
+end
+
+% Validate Maximum Number of Iterations
+if isnan(maxNumIterations) || mod(maxNumIterations,1) ~= 0 || maxNumIterations < 1
+    errordlg('Maximum Number of Iterations must be a positive integer.', 'Invalid Input');
+    return;
+end
+
+% Validate Maximum Number of Categories
+if isnan(maxNumCategories) || mod(maxNumCategories,1) ~= 0 || maxNumCategories < 1
+    errordlg('Maximum Number of Categories must be a positive integer.', 'Invalid Input');
+    return;
+end
+
+% End of Input validation -------
+
 % resample frequency contours to new sampling interval if 'resample' is
 % selected
 if resample == 1
