@@ -13,9 +13,31 @@ function X = warp(u1, u2)
 
 global warpFactorLevel; % maximum number of allowed consecutive vertical steps, or the warp factor level
 
-%TEST FOR DIFFERENCES IN LENGTH GREATER THAN WARPFACTORLEVEL
 m = length(u1); %the number of data points in the reference contour
 n = length(u2); %the number of data points in the comparison contour
+
+% Only accept sequences of equal length; otherwise we can't align without warping.
+if warpFactorLevel == 1
+    if m ~= n
+        X = {0, []};
+        return;
+    end
+    
+    % Identity path: strictly diagonal alignment
+    warpfun = 1:n;
+    
+    % Similarity along the diagonal only (matches what DP would yield with only diagonal steps)
+    % Handle potential divide-by-zero safely (though u1>0 in practice).
+    denom = max(u1(:), u2(:));
+    denom(denom == 0) = Inf;  % ensures 0/0 -> 0 similarity
+    s = (min(u1(:), u2(:)) ./ denom) * 100;  % same formula used in M(i,j)
+    D = mean(s);
+    
+    X = {D, warpfun};
+    return;
+end
+
+%TEST FOR DIFFERENCES IN LENGTH GREATER THAN WARPFACTORLEVEL
 if max([m n])/(min([m n])-1) >= warpFactorLevel
     %disp('The length of the two contours differs by more than a factor of warpFactorLevel');
     X = {0, []}; return; 
