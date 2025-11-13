@@ -81,6 +81,9 @@ end
 
 % End of Input validation -------
 
+h = findobj('Tag', 'compareWarped');
+compareWarped = get(h, 'Value');
+
 % resample frequency contours to new sampling interval if 'resample' is
 % selected
 if resample == 1
@@ -193,7 +196,7 @@ for iterationNumber = 1:NET.maxNumIterations
                 % If so, the current category should code the input.
                 % Therefore, we should update the weights and induce resonance.
                 % warpFunction = round(mean([warpFunction; 1:(warpFunction(end)-1)/(length(warpFunction)-1):warpFunction(end)]));
-                NET.weight = ARTwarp_Update_Weights(currentData, NET.weight, currentCategory, NET.learningRate, warpFunction);
+                NET.weight = ARTwarp_Update_Weights(currentData, NET.weight, currentCategory, NET.learningRate, warpFunction, compareWarped);
                 DATA(sampleNumber).category = currentCategory;
                 Xmax = max([Xmax length(find(NET.weight(:, currentCategory)>0))]);
                 Ymax = max([Ymax max(NET.weight(:, currentCategory))]);
