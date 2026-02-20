@@ -25,7 +25,11 @@ for c1 = 1:numSamples
     clear tempres
     clear ctrlength
     clear fcontour
-    eval(['load ' fullfile(DATA(c1).folder, DATA(c1).name) ' -mat']);
+    
+    % Parses the file name as a string variable
+    filename = fullfile(DATA(c1).folder, DATA(c1).name);
+    load(filename, '-mat'); % enforce reading the file as a MAT-file regardless of its extension
+    
     if exist('fcontour', 'var')
         DATA(c1).ctrlength = fcontour(length(fcontour))/1000;
         DATA(c1).length = length(fcontour);
