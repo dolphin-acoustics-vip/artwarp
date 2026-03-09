@@ -1,9 +1,13 @@
-function TempRes3(freqCol, tempres, folder_name)
+function TempRes3(is_cli_mode, freqCol, tempres, folder_name)
 
 % Procedure to convert frequency-time formatted .csv files to .ctrs for
 % categorisation by ARTwarp
 %
 % INPUTS
+% - is_cli_mode (1x1 boolean): boolean flag indicating whether to bypass
+% collecting parameters through the GUI. If is_cli_mode = false, the
+% program will promt the user to enter values for freqCol, tempres, and
+% folder_name
 % - freqCol (1x1 double): the column containing the frequency values in the
 % csv file. Should be 1 for pulse trains and 2 for whistles from ROCCA
 % - tempres (1x1 double): the temporal resolution of the audio sample
@@ -23,6 +27,45 @@ function TempRes3(freqCol, tempres, folder_name)
 
 %folder_name = uigetdir(); %Code for selecting the folder
 %if (~folder_name); return; end
+
+% If not running in CLI mode, get values for folder_name, freqCol and
+% tempres from the uicontrol objects
+if ~is_cli_mode
+
+    h = findobj('Tag', 'folder_name');
+    folder_name = get(h, 'String');
+
+    h = findobj('Tag', 'freqCol');
+    freqCol = str2num(get(h, 'String'));
+
+    h = findobj('Tag', 'tempres');
+    tempres = str2num(get(h, 'String'));
+
+end
+
+% Validate folder_name
+if ~isfolder(folder_name)
+    errordlg('The specified folder does not exist.', 'Invalid Input');
+    return;
+end
+
+% Validate freqCol
+if isnan(freqCol) || mod(freqCol,1) ~= 0 || freqCol <= 1
+    errordlg('freqCol must be an integer greater than 1.', 'Invalid Input');
+    return;
+end
+
+% Validate tempres
+if isnan(tempres) || tempres <= 0
+   errordlg('tempres must be a real number greater than 0.', 'Invalid Input');
+   return;
+end
+
+% if not running in cli mode, close the 'conversion_parameter_GUI' window
+if ~is_cli_mode
+    h = findobj('Tag','conversion_parameter_GUI');
+    close(h)
+end
 
 % NAVIGATE TO FOLDER
 cd (folder_name);
