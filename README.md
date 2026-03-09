@@ -1,3 +1,5 @@
+[![Unit tests](https://github.com/dolphin-acoustics-vip/artwarp/actions/workflows/CI-tests.yml/badge.svg)](https://github.com/dolphin-acoustics-vip/artwarp/actions/workflows/CI-tests.yml)
+[![codecov](https://codecov.io/gh/dolphin-acoustics-vip/artwarp/branch/stable-1/graph/badge.svg?token=2USLQXKU2V)](https://app.codecov.io/gh/dolphin-acoustics-vip/artwarp/tree/stable-1)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7713614.svg)](https://doi.org/10.5281/zenodo.7713614)
 
 # ARTwarp 
