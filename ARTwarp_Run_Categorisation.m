@@ -126,6 +126,8 @@ end
 
 % TRAINING
 [x, sortedRandom] = sort(randn(numSamples, 1)); %randomize the list of contours
+
+fprintf("\n--- ITERATIONS ---\n");
 % Go through the data once for every iteration.
 for iterationNumber = 1:NET.maxNumIterations
     
@@ -265,6 +267,14 @@ for iterationNumber = 1:NET.maxNumIterations
     end
     % If no new categories were added, and no inputs were reclassified in the current iteration
     % then we've reached equilibrium. Thus, we can stop training.
+    
+    if is_cli_mode
+        fprintf('\nIteration %d complete\n', iterationNumber);
+        fprintf('Reclassified samples: %d\n', numChanges);
+        fprintf('Current categories: %d\n', NET.numCategories);
+        drawnow;
+    end
+    
     if numChanges == 0
         break;
     end  
@@ -279,9 +289,6 @@ for iterationNumber = 1:NET.maxNumIterations
 
     % Save iteration information to the specified results folder
     save(fullfile(output_folder, name)); 
-
-    % Output success message
-    fprintf('Results successfully exported to: %s\n', output_folder);
 end
 
 % ASSEMBLE THE REFCONTOURS STRUCT
@@ -369,6 +376,10 @@ end
 formatSpec = 'ARTwarp%02.0fFINAL';
 endname = sprintf(formatSpec,NET.vigilance);
 save(fullfile(output_folder, endname)); 
+
+% Output success message
+fprintf('\nARTwarp CLI mode run finished.\n');
+fprintf('Results successfully exported to: %s\n', output_folder);
 
 % Re-enable GUI options if not running in cli mode
 if ~is_cli_mode
