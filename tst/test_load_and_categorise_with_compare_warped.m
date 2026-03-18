@@ -1,5 +1,3 @@
-%T=readtable('../Test_Data/csv/Sb_HICEAS1706_20170913_AD259_S123_sel22_220035.csv')
-
 % GET ARTwarp ROOT PATH FOR REFERENCE WHILE RUNNING IN CONTINUOUS
 % INTEGRATION
 tstDir = fileparts(mfilename("fullpath"));
@@ -25,7 +23,8 @@ TempRes3(true, 2, 0.005, csvDir)
 % do not need to navigate to the ARTwarpRoot directory to run this, but
 % ARTwarp_cli_mode must be on the MATLAB path 
 
-% Categorise using the standard parameters warpFactorLevel = 3, vigilance =
+% Categorise using the parameters warpFactorLevel = 3, vigilance =
 % 96, bias = 0.000001, learningRate = 0.1, maxNumCategories = 56,
-% maxNumIterations = 100, resample = 1, sampleInterval = 0.01.
-ARTwarp_cli_mode(csvDir, 3, 96, 0.000001, 0.1, 56, 100, 1, 0.01, 'Test_Output_Dir')
+% maxNumIterations = 100, resample = 1, sampleInterval = 0.01, and
+% compareWarped = 1
+ARTwarp_cli_mode(csvDir, 3, 96, 0.000001, 0.1, 56, 100, 1, 0.01, 'Test_Output_Dir', 1)

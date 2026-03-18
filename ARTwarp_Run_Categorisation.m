@@ -28,6 +28,9 @@ if ~is_cli_mode
     h = findobj('Tag', 'resample');
     resample = get(h, 'Value');
 
+    h = findobj('Tag', 'compareWarped');
+    compareWarped = get(h, 'Value');
+
 % Otherwise, get the network parameters from the network_params dicttionary
 % passed from ARTwarp_cli_mode
 else
@@ -39,6 +42,7 @@ else
     maxNumIterations = network_params('maxNumIterations');
     resample = network_params('resample');
     sampleInterval = network_params('sampleInterval');
+    compareWarped = network_params('compareWarped');
 end
 
 % Input validation --------
@@ -80,9 +84,6 @@ if isnan(maxNumCategories) || mod(maxNumCategories,1) ~= 0 || maxNumCategories <
 end
 
 % End of Input validation -------
-
-h = findobj('Tag', 'compareWarped');
-compareWarped = get(h, 'Value');
 
 % resample frequency contours to new sampling interval if 'resample' is
 % selected

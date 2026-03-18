@@ -45,6 +45,11 @@ addRequired(p, 'sampleInterval', validationFcn);
 % Optional output folder name argument, default is empty
 addOptional(p, 'outputFolder', [], @(x) ischar(x) || isempty(x));
 
+% Optional argument to update weights according to warped contours, 1 =
+% update according to warped, 0 = update normally according to original.
+% Default is 0
+addOptional(p, 'compareWarped', 0, @(x) (x==0 || x==1) && isnumeric(x) && isscalar(x));
+
 % Parse and validate the input arguments (folder paths given must be to
 % folders, file path given must be to a file)
 parse(p, varargin{:});
@@ -61,6 +66,7 @@ maxNumCategories = p.Results.maxNumCategories;
 maxNumIterations = p.Results.maxNumIterations;
 resample = p.Results.resample;
 sampleInterval = p.Results.sampleInterval;
+compareWarped = p.Results.compareWarped;
 
 % If the input folder does not exist, raise an error
 if isempty(inputFolder)
@@ -93,7 +99,7 @@ params = dictionary("warpFactorLevel", warpFactorLevel, "vigilance",...
     vigilance, "bias", bias, "learningRate", learningRate,...
     "maxNumCategories", maxNumCategories, "maxNumIterations",...
     maxNumIterations, "resample", resample, "sampleInterval",...
-    sampleInterval);
+    sampleInterval, "compareWarped", compareWarped);
 
 % LOAD DATA FROM SPECIFIED INPUT FOLDER
 
