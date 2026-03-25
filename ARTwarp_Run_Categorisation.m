@@ -270,8 +270,8 @@ for iterationNumber = 1:NET.maxNumIterations
     
     if is_cli_mode
         fprintf('\nIteration %d complete\n', iterationNumber);
-        fprintf('Reclassified samples: %d\n', numChanges);
-        fprintf('Current categories: %d\n', NET.numCategories);
+        fprintf('Reclassified samples : %d\n', numChanges);
+        fprintf('Current categories   : %d\n', NET.numCategories);
         drawnow;
     end
     
