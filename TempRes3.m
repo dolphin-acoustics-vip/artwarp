@@ -89,3 +89,6 @@ for i=1:length(fileList)
     save(filename,'freqContour','tempres','ctrlength')
 
 end
+
+% Output success message
+fprintf('Converted .ctr files succesfully saved to: %s\n', folder_name)
