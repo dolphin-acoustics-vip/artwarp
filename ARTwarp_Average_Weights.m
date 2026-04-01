@@ -25,26 +25,31 @@ function updatedWeight = ARTwarp_Average_Weights(weight, inputLengths, inputCate
 
 % For every category:
 for cat = 1:numCategories
-
-    % Find all elements of the reference contour for that category which are not NaN
-    i = weight(:,cat);
-    i = i(i>0);
-    weightLength = length(i);
-
-    % Find new length from the average length of contours in that category
-    newLength = round(mean(inputLengths(inputCategories==cat)));
-
-    % interpolate (warp) the weight to a new spacing of (weightLength-1)/
-    % (newLength-1). This ensures the weight has newLength
-    % points, while retaining the same shape
-    newWeight = interp1(1:weightLength, i, 1:(weightLength-1)/(newLength-1):weightLength);
-
-    % Update the associated column in the weight matrix to hold the updated
-    % reference contour, padding the end with NaNs to maintain the dimensions
-    % of the matrix.            
-    weight(:,cat) = zeros(numFeatures,1).*NaN;
-    weight(1:newLength,cat) = newWeight';
     
+    % Get the lengths of contours in that category
+    contourLengths = inputLengths(inputCategories==cat);
+
+    % If there were any contours in that category:
+    if ~isempty(contourLengths)
+        % Find all elements of the reference contour for that category which are not NaN
+        i = weight(:,cat);
+        i = i(i>0);
+        weightLength = length(i);
+    
+        % Find new length from the average length of contours in that category
+        newLength = round(mean(contourLengths));
+    
+        % interpolate (warp) the weight to a new spacing of (weightLength-1)/
+        % (newLength-1). This ensures the weight has newLength
+        % points, while retaining the same shape
+        newWeight = interp1(1:weightLength, i, 1:(weightLength-1)/(newLength-1):weightLength);
+    
+        % Update the associated column in the weight matrix to hold the updated
+        % reference contour, padding the end with NaNs to maintain the dimensions
+        % of the matrix.            
+        weight(:,cat) = zeros(numFeatures,1).*NaN;
+        weight(1:newLength,cat) = newWeight';
+    end
 end
 
 updatedWeight = weight;
