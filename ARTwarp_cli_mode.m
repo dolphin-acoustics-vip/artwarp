@@ -45,6 +45,16 @@ addParameter(p, 'resample', 1, validationFcn);
 validationFcn = @(x) isnumeric(x) && isscalar(x);
 addParameter(p, 'sampleInterval', 0.01, validationFcn);
 
+% Optional argument to update weights according to warped contours, 1 =
+% update according to warped, 0 = update normally according to original.
+% Default is 0
+addParameter(p, 'compareWarped', 0, @(x) (x==0 || x==1) && isnumeric(x) && isscalar(x));
+
+% Optional argument to try to recategorise single-contour category
+% contours at the end of each iteration, 1 = try to recategorise, 0 = do
+% not try to recategorise. Default is 0
+addParameter(p, 'recatSingleCats', 0, @(x) (x==0 || x==1) && isnumeric(x) && isscalar(x));
+
 % If number of parameters is below expected, 
 % print usage, example usage, and end the program
 if nargin == 0
@@ -56,11 +66,6 @@ elseif nargin > 0 && nargin < 5
     fprintf("For example: ARTwarp_cli_mode('ctr', 3, 95, 100, 100)\n");
     return
 end
-
-% Optional argument to update weights according to warped contours, 1 =
-% update according to warped, 0 = update normally according to original.
-% Default is 0
-addParameter(p, 'compareWarped', 0, @(x) (x==0 || x==1) && isnumeric(x) && isscalar(x));
 
 % Parse and validate the input arguments (folder paths given must be to
 % folders, file path given must be to a file)
@@ -79,6 +84,7 @@ maxNumIterations = p.Results.maxNumIterations;
 resample = p.Results.resample;
 sampleInterval = p.Results.sampleInterval;
 compareWarped = p.Results.compareWarped;
+recatSingleCats = p.Results.recatSingleCats;
 
 % If the input folder does not exist, raise an error
 if isempty(inputFolder)
@@ -99,7 +105,8 @@ params = dictionary("warpFactorLevel", warpFactorLevel, "vigilance",...
     vigilance, "bias", bias, "learningRate", learningRate,...
     "maxNumCategories", maxNumCategories, "maxNumIterations",...
     maxNumIterations, "resample", resample, "sampleInterval",...
-    sampleInterval, "compareWarped", compareWarped);
+    sampleInterval, "compareWarped", compareWarped, "recatSingleCats",...
+    recatSingleCats);
 
 % Print all parameters so user is aware of the input
 fprintf('\n--- INPUT PARAMETERS ---\n');
@@ -113,6 +120,7 @@ fprintf('learningRate      : %g\n', learningRate);
 fprintf('resample          : %g\n', resample);
 fprintf('sampleInterval    : %g\n', sampleInterval);
 fprintf('compareWarped     : %d\n', compareWarped);
+fprintf('recatSingleCats   : %d\n', recatSingleCats);
 fprintf('outputFolder      : %s\n', outputFolder);
 drawnow; % forces MATLAB to flush output immediately
 % LOAD DATA FROM SPECIFIED INPUT FOLDER
