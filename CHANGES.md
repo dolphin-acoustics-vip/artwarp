@@ -10,6 +10,8 @@ This release focuses on the addition of a Command Line Interface (CLI) as a fast
 
 - Added option to update reference contours (weights) according to time-warped input contours, i.e. do not unwarp reference contours when learning. Instead, reference contours are interpolated to the mean length of contours in their category at the end of each iteration. This can help to preserve 'stepped' frequency modulation patterns [#94](https://github.com/dolphin-acoustics-vip/artwarp/pull/94)
 
+- Added option to attempt to recategorise contours in Single Whistle Categories (SWCs) only if they exceed the vigilance threshold for a different category. This feature was added in [#118](https://github.com/dolphin-acoustics-vip/artwarp/pull/118) in order to minimise the number of SWCs.
+
 ### Improved and extended functionality
 
 - Added option to specify output folder when using the CLI [#101](https://github.com/dolphin-acoustics-vip/artwarp/pull/101)
