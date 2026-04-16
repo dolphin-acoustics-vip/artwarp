@@ -55,6 +55,9 @@ addParameter(p, 'compareWarped', 0, @(x) (x==0 || x==1) && isnumeric(x) && issca
 % not try to recategorise. Default is 0
 addParameter(p, 'recatSingleCats', 0, @(x) (x==0 || x==1) && isnumeric(x) && isscalar(x));
 
+% Optional output folder name argument, default is empty
+addParameter(p, 'outputFolder', "", @(x) isstring(x) || ischar(x) || isempty(x));
+
 % If number of parameters is below expected, 
 % print usage, example usage, and end the program
 if nargin == 0
@@ -85,14 +88,18 @@ resample = p.Results.resample;
 sampleInterval = p.Results.sampleInterval;
 compareWarped = p.Results.compareWarped;
 recatSingleCats = p.Results.recatSingleCats;
+outputFolder = char(p.Results.outputFolder);
 
 % If the input folder does not exist, raise an error
 if isempty(inputFolder)
     error('No input folder specified');
 end
 
-% Name the output folder based on the input folder, vigilance and warp factor
-outputFolder = inputFolder + "_" + string(vigilance) + "_" + string(warpFactorLevel);
+if isempty(outputFolder)
+    % Name the output folder based on the input folder, vigilance and warp factor
+    outputFolder = [inputFolder '_' num2str(vigilance) '_' num2str(warpFactorLevel)];
+end
+
 
 if ~exist(outputFolder, 'dir')
 % If a folder with this name doesn't exist yet, make a

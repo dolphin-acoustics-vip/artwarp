@@ -60,6 +60,7 @@ def.resample = 1;
 def.sampleInterval = 0.01;
 def.compareWarped = 0;
 def.recatSingleCats = 0;
+def.outputFolder = '';
 
 fprintf('\n--- Optional parameters (press Enter to use default) ---\n');
 
@@ -69,7 +70,7 @@ while true
     if isempty(tmp)
         bias = def.bias;
         break;
-    elseif isnumeric(tmp) && isscalar(tmp) && tmp > 0
+    elseif isnumeric(tmp) && isscalar(tmp) && tmp >= 0 && tmp <= 1
         bias = tmp;
         break;
     end
@@ -141,6 +142,15 @@ while true
     fprintf('Invalid input. Must be 0 or 1.\n');
 end
 
+% Output folder name
+% strtrim to ensure there are no leading or trailing spaces.
+tmp = strtrim(input('Enter output folder name (optional): ', 's'));
+if isempty(tmp)
+    outputFolder = def.outputFolder;
+else
+    outputFolder = tmp;
+end
+
 % Build command string to run the CLI
 cmd = sprintf("ARTwarp_cli_mode('%s', %d, %d, %d, %d", ...
     inputFolder, warpFactorLevel, vigilance, maxNumCategories, maxNumIterations);
@@ -168,6 +178,10 @@ end
 
 if recatSingleCats ~= def.recatSingleCats
     cmd = sprintf('%s, ''recatSingleCats'', %g', cmd, recatSingleCats);
+end
+
+if ~strcmp(outputFolder, def.outputFolder)
+    cmd = sprintf('%s, ''outputFolder'', ''%s''', cmd, outputFolder);
 end
 
 cmd = sprintf('%s)', cmd);

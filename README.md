@@ -62,6 +62,7 @@ Press **Enter** to use the default value.
 - **resample** (default: `1`) - `1 = yes`, `0 = no`
 - **sampleInterval** (default: `0.01` seconds) - must be a positive number
 - **compareWarped** (default: `0`) - `1 = yes`, `0 = no`
+- **outputFolder** (optional) - must be a string
 All optional inputs are validated. Invalid entries will trigger a re-prompt.
 
 ---
