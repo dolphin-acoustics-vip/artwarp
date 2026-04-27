@@ -1,0 +1,86 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: ARTwarp - automated categorisation of tonal animal sounds
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Vincent
+    family-names: Janik
+    affiliation: University of St Andrews
+    orcid: 'https://orcid.org/0000-0001-7894-0121'
+  - given-names: Olexandr
+    family-names: Konovalov
+    affiliation: University of St Andrews
+    orcid: 'https://orcid.org/0000-0001-5299-3292'
+  - given-names: Kai
+    family-names: Kerlaff
+    affiliation: University of St Andrews
+  - given-names: Douglas
+    family-names: Gillespie
+    affiliation: University of St Andrews
+    orcid: 'https://orcid.org/0000-0001-9628-157X'
+  - given-names: Tamra
+    family-names: Chan
+    affiliation: University of St Andrews
+  - given-names: Ayam
+    family-names: Babu
+    affiliation: University of St Andrews
+  - given-names: Rohan
+    family-names: Kumar
+    affiliation: University of St Andrews
+  - given-names: Felix
+    family-names: Leitner
+    affiliation: University of St Andrews
+  - given-names: Archie
+    family-names: Cook
+    affiliation: University of St Andrews
+  - given-names: Harvard
+    family-names: Tham
+    affiliation: University of St Andrews
+  - given-names: Christina
+    family-names: Day-Reader
+    affiliation: University of St Andrews
+    orcid: 'https://orcid.org/0009-0003-4929-699X'
+  - given-names: Thomas George
+    family-names: Jenks
+    affiliation: University of St Andrews
+    orcid: 'https://orcid.org/0009-0005-2161-2166'
+  - given-names: Emily
+    family-names: McCloskey
+    affiliation: University of St Andrews
+  - given-names: Wendi
+    family-names: Fellner
+    affiliation: University of St Andrews
+    orcid: 'https://orcid.org/0000-0001-6213-1071'
+  - given-names: Charlie
+    family-names: Hargrave
+    affiliation: University of St Andrews
+    orcid: 'https://orcid.org/0009-0001-4205-0343'
+  - given-names: Julie
+    family-names: Oswald
+    affiliation: University of St Andrews
+    orcid: 'https://orcid.org/0000-0002-1524-9592'
+  - given-names: Volker
+    family-names: Deecke
+    affiliation: University of Cumbria
+    orcid: 'https://orcid.org/0000-0003-2781-5915'
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.7713614
+repository-code: 'https://github.com/dolphin-acoustics-vip/artwarp'
+url: 'https://github.com/dolphin-acoustics-vip/artwarp/wiki'
+abstract: >-
+  ARTwarp is a MATLAB-based programme for the automated
+  categorisation of tonal animal sounds.
+keywords:
+  - MATLAB
+  - Adaptive resonanse theory
+  - Dynamic time warping
+  - Passive acoustic monitoring
+license: LGPL-3.0
+version: v2.0
+date-released: '2026-04-14'
