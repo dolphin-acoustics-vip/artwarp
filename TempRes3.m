@@ -50,8 +50,8 @@ if ~isfolder(folder_name)
 end
 
 % Validate freqCol
-if isnan(freqCol) || mod(freqCol,1) ~= 0 || freqCol <= 1
-    errordlg('freqCol must be an integer greater than 1.', 'Invalid Input');
+if isnan(freqCol) || mod(freqCol,1) ~= 0 || freqCol <= 0
+    errordlg('freqCol must be a positive integer.', 'Invalid Input');
     return;
 end
 
