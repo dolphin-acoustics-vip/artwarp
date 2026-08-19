@@ -55,6 +55,11 @@ addParameter(p, 'compareWarped', 0, @(x) (x==0 || x==1) && isnumeric(x) && issca
 % not try to recategorise. Default is 0
 addParameter(p, 'recatSingleCats', 0, @(x) (x==0 || x==1) && isnumeric(x) && isscalar(x));
 
+% Optional argument to randomise order of contours before categorisation, 
+% 1 = try to randomise, 0 = order by filenames, according to Unicode
+% dictionary order. Default is 1
+addParameter(p, 'randomiseSortOrder', 1, @(x) (x==0 || x==1) && isnumeric(x) && isscalar(x));
+
 % Optional output folder name argument, default is empty
 addParameter(p, 'outputFolder', "", @(x) isstring(x) || ischar(x) || isempty(x));
 
@@ -88,6 +93,7 @@ resample = p.Results.resample;
 sampleInterval = p.Results.sampleInterval;
 compareWarped = p.Results.compareWarped;
 recatSingleCats = p.Results.recatSingleCats;
+randomiseSortOrder = p.Results.randomiseSortOrder;
 outputFolder = char(p.Results.outputFolder);
 
 % If the input folder does not exist, raise an error
@@ -113,7 +119,7 @@ params = dictionary("warpFactorLevel", warpFactorLevel, "vigilance",...
     "maxNumCategories", maxNumCategories, "maxNumIterations",...
     maxNumIterations, "resample", resample, "sampleInterval",...
     sampleInterval, "compareWarped", compareWarped, "recatSingleCats",...
-    recatSingleCats);
+    recatSingleCats, "randomiseSortOrder", randomiseSortOrder);
 
 % Print all parameters so user is aware of the input
 fprintf('\n--- INPUT PARAMETERS ---\n');
@@ -128,6 +134,7 @@ fprintf('resample          : %g\n', resample);
 fprintf('sampleInterval    : %g\n', sampleInterval);
 fprintf('compareWarped     : %d\n', compareWarped);
 fprintf('recatSingleCats   : %d\n', recatSingleCats);
+fprintf('randomiseSortOrder   : %d\n', randomiseSortOrder)
 fprintf('outputFolder      : %s\n', outputFolder);
 drawnow; % forces MATLAB to flush output immediately
 % LOAD DATA FROM SPECIFIED INPUT FOLDER

@@ -34,6 +34,9 @@ if ~is_cli_mode
     h = findobj('Tag', 'recatSingleCats');
     recatSingleCats = get(h, 'Value');
 
+    h = findobj('Tag', 'randomiseSortOrder');
+    randomiseSortOrder = get(h, 'Value');
+
 % Otherwise, get the network parameters from the network_params dicttionary
 % passed from ARTwarp_cli_mode
 else
@@ -47,6 +50,7 @@ else
     sampleInterval = network_params('sampleInterval');
     compareWarped = network_params('compareWarped');
     recatSingleCats = network_params('recatSingleCats');
+    randomiseSortOrder = network_params('randomiseSortOrder');
 end
 
 % Input validation --------
@@ -141,7 +145,21 @@ if ~is_cli_mode
 end
 
 % TRAINING
-[x, sortedRandom] = sort(randn(numSamples, 1)); %randomize the list of contours
+
+% If randomiseSortOrder is selected, randomise the order of the samples
+if randomiseSortOrder == 1
+    [~, sortOrder] = sort(randn(numSamples, 1));
+
+% Otherwise, order the samples by their filename, according to Unicode
+% dictionary order
+else
+    names = string(zeros(1,numSamples).*NaN);
+    for i=1:numSamples
+        names(i) = DATA(i).name;
+    end
+    [~, sortOrder] = sort(names);
+end
+   
 
 fprintf("\n--- ITERATIONS ---\n");
 % Go through the data once for every iteration.
@@ -153,7 +171,7 @@ for iterationNumber = 1:NET.maxNumIterations
     numChanges = 0; 
     % Classify and learn on each sample.
     for indexNumber = 1:numSamples
-        sampleNumber =sortedRandom(indexNumber); 
+        sampleNumber =sortOrder(indexNumber); 
         % Get the current data sample, stepping through the randomized list in order.
         currentData = DATA(sampleNumber).contour'; %contour vector of the active contour
         currentLength = length(currentData); %length of this contour

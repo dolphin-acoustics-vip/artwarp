@@ -60,6 +60,7 @@ def.resample = 1;
 def.sampleInterval = 0.01;
 def.compareWarped = 0;
 def.recatSingleCats = 0;
+def.randomiseSortOrder = 1;
 def.outputFolder = '';
 
 fprintf('\n--- Optional parameters (press Enter to use default) ---\n');
@@ -142,6 +143,19 @@ while true
     fprintf('Invalid input. Must be 0 or 1.\n');
 end
 
+% randomiseSortOrder (0 or 1), default 1
+while true
+    tmp = input(sprintf('randomiseSortOrder? 1=yes, 0=no (default %d): ', def.randomiseSortOrder));
+    if isempty(tmp)
+        randomiseSortOrder = def.randomiseSortOrder;
+        break;
+    elseif isnumeric(tmp) && isscalar(tmp) && (tmp == 0 || tmp == 1)
+        randomiseSortOrder = tmp;
+        break;
+    end
+    fprintf('Invalid input. Must be 0 or 1.\n');
+end
+
 % Output folder name
 % strtrim to ensure there are no leading or trailing spaces.
 tmp = strtrim(input('Enter output folder name (optional): ', 's'));
@@ -178,6 +192,10 @@ end
 
 if recatSingleCats ~= def.recatSingleCats
     cmd = sprintf('%s, ''recatSingleCats'', %g', cmd, recatSingleCats);
+end
+
+if randomiseSortOrder ~= def.randomiseSortOrder
+    cmd = sprintf('%s, ''randomiseSortOrder'', %g', cmd, randomiseSortOrder);
 end
 
 if ~strcmp(outputFolder, def.outputFolder)
