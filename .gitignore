@@ -32,3 +32,9 @@ octave-workspace
 
 # Matlab binary files used to save network parameters
 *.mat
+
+# macOS folders
+.DS_Store
+
+# ctr files created in testing
+Test_Data/**/*.ctr

@@ -13,6 +13,9 @@ DATA = rmfield(DATA,'datenum');
 DATA = rmfield(DATA,'bytes');
 DATA = rmfield(DATA,'isdir');
 [numSamples x] = size(DATA);
+
+waitbr = waitbar(0, "Loading CSV contours...");
+
 for c1 = 1:numSamples
     
     % make sure to skip the header row, since it has characters in it and
@@ -21,13 +24,21 @@ for c1 = 1:numSamples
    % test=csvread(DATA(c1).name,0,0);    %this is if you don't want it to skip the header row...IS THAT RIGHT??
     test=csvread(fullfile(DATA(c1).folder, DATA(c1).name),1,0);   %this is if you want it to skip the
     %header row
-    freqContour = test(:,1);
-    DATA(c1).ctrlength = freqContour(length(freqContour))/1000;
+    freqContour = test(:,2)';
+    timeContour = test(:,1)';
+    DATA(c1).ctrlength = timeContour(length(freqContour))/1000;
     DATA(c1).length = length(freqContour)-1;
     DATA(c1).contour = freqContour(1:DATA(c1).length);
     DATA(c1).tempres = DATA(c1).ctrlength/DATA(c1).length;
     DATA(c1).category = 0;
+    DATA(c1).match = [];
+    DATA(c1).id = [];
+    DATA(c1).parent_ids = [];
+
+    waitbar(c1/numSamples, waitbr, sprintf('Loaded %d of %d', c1, numSamples));
 end
+close(waitbr)
+
 h = findobj('Tag', 'Runmenu');                                                                                                                        
 set(h, 'Enable', 'on');
 

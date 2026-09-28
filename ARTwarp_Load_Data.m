@@ -31,6 +31,9 @@ DATA = rmfield(DATA,'isdir');
 % variable (which it will be soon) and to stop it trying to use the built
 % in graphics function fcontour(...)
 fcontour = 0;
+if ~is_cli_mode
+    waitbr = waitbar(0, 'Loading contours...');
+end
 for c1 = 1:numSamples
     clear tempres
     clear ctrlength
@@ -72,6 +75,13 @@ for c1 = 1:numSamples
     else
         DATA(c1).parent_ids = []; % otherwise, make the value in the DATA.parent_ids field [], to show that no parent_ids have been assigned
     end
+    if ~is_cli_mode
+        waitbar(c1/numSamples, waitbr, sprintf('Loaded %d of %d samples', c1, numSamples));
+    end
+end
+
+if ~is_cli_mode
+    close(waitbr)
 end
 
 % if not running in cli mode, update the gui to undim the 'run' menu

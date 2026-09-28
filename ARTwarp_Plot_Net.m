@@ -78,6 +78,9 @@ for counter1 = 1:NET.numCategories
 end
 rowCounter = ones(1,NET.numCategories)*(numRows-1);
 disp(sprintf('Contour \t Category \t Match'));
+
+waitbr = waitbar(0, 'Plotting contours...');
+
 for counter2 = 1:numContours
     category = DATA(counter2).category;
     disp(sprintf('%s \t %1i \t %6.3f',DATA(counter2).name,category,DATA(counter2).match));
@@ -101,4 +104,8 @@ for counter2 = 1:numContours
         'Visible', 'on');   
     h3 = line('Parent', h1, 'Color','k', 'Tag', ['P' num2str(counter1)], 'XData', 1:length(DATA(counter2).contour), 'YData', DATA(counter2).contour);
     rowCounter(category) = rowCounter(category)-1;
-end 
+
+    waitbar(counter2/numContours, waitbr, sprintf('Plotted %d of %d', counter2, numContours));
+end
+
+close(waitbr)

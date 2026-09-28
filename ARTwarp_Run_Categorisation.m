@@ -138,7 +138,14 @@ end
 % if not running in cli mode, GENERATING THE GRAPHIC DISPLAY
 if ~is_cli_mode
     ARTwarp_Create_Figure
+    % Create a waitbar with option to cancel figure generation
+    waitbr = waitbar(0, 'Starting...', 'Name', 'Running categorisation', ...
+        'CreateCancelBtn', 'setappdata(gcbf,''canceling'',1)');
+    setappdata(waitbr, 'canceling', 0);
+    % If generation is stopped for any reason, waitbar is deleted
+    cleanupWb = onCleanup(@() delete(findall(0, 'Tag', 'TMWWaitbar')));
 end
+cancelled = false;
 
 % TRAINING
 [x, sortedRandom] = sort(randn(numSamples, 1)); %randomize the list of contours
@@ -280,10 +287,25 @@ for iterationNumber = 1:NET.maxNumIterations
             fprintf('Contour Name: %s\n', currentName);
         end
 
+        % Checks for cancel during contours
+        if ~is_cli_mode
+            if getappdata(waitbr, 'canceling')
+                cancelled = true;
+                break;
+            end
+            waitbar(indexNumber/numSamples, waitbr, ...
+                sprintf('Iteration %d: contour %d of %d', iterationNumber, indexNumber, numSamples));
+        end
+
+    end
+
+    % Checks for cancel after each iteration
+    if cancelled
+        break;
     end
     % If no new categories were added, and no inputs were reclassified in the current iteration
     % then we've reached equilibrium. Thus, we can stop training.
-    
+
     if is_cli_mode
         fprintf('\nIteration %d complete\n', iterationNumber);
         fprintf('Reclassified samples : %d\n', numChanges);
@@ -349,7 +371,23 @@ for iterationNumber = 1:NET.maxNumIterations
     name = sprintf(formatSpec,NET.vigilance, iterationNumber);
 
     % Save iteration information to the specified results folder
-    save(fullfile(output_folder, name));
+    % (excluding the waitbar handle, which would save the figure too)
+    save(fullfile(output_folder, name), '-regexp', '^(?!(waitbr|cleanupWb)$).');
+end
+
+% Close and delete the waitbar
+if ~is_cli_mode
+    delete(waitbr);
+    clear waitbr
+end
+
+% If cancelled, keep the per-iteration results already saved but skip the
+% final outputs, which would come from an incomplete run
+if cancelled
+    fprintf('\nCategorisation cancelled during iteration %d.\n', iterationNumber);
+    h = findobj('Tag', 'Runmenu');
+    set(h, 'Enable', 'on');
+    return
 end
 
 % ASSEMBLE THE REFCONTOURS STRUCT
@@ -436,7 +474,7 @@ end
 % Save iteration information to the specified results folder
 formatSpec = 'ARTwarp%02.0fFINAL';
 endname = sprintf(formatSpec,NET.vigilance);
-save(fullfile(output_folder, endname)); 
+save(fullfile(output_folder, endname), '-regexp', '^(?!(waitbr|cleanupWb)$).'); 
 
 % Output success message
 fprintf('\nARTwarp CLI mode run finished.\n');
