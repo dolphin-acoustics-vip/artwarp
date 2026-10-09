@@ -85,7 +85,7 @@ for i=1:length(fileList)
 %    filename=sprintf('Ia%d.ctr', i); % Save new files as .ctr files
     [filepath,name,ext] = fileparts(curFile);
     filename = fullfile(filepath,[name '.ctr']);
-    ctrlength=length(freqContour)*tempres;% this calculates the duration of each contour 
+    ctrlength=(length(freqContour)-1)*tempres;% this calculates the duration of each contour 
     save(filename,'freqContour','tempres','ctrlength')
 
 end
